@@ -1,8 +1,8 @@
 function [ f107Average, f107Daily, magneticIndex ] = computeSWnrlmsise( SWmatDaily, SWmatMonthlyPred, jdate, varargin )
-%READSW reads space weather file from CelesTrack
-% [  ] = READSW(SWFNAME, JDATE, UTHR)
+%COMPUTESWNRLMSISE reads space weather file from CelesTrack
+% [  ] = COMPUTESWNRLMSISE(SWMATDAILY, SWMATMONTHLYPRED, JDATE, UTHR)
 %
-% Inputs for READSW are:
+% Inputs for COMPUTESWNRLMSISE are:
 % SWMATDAILY : 
 %              matrix for F10.7Daily, F10.7Average, magnetic index
 %              Daily observed and predicted AP (8)
@@ -13,9 +13,11 @@ function [ f107Average, f107Daily, magneticIndex ] = computeSWnrlmsise( SWmatDai
 %              Magnetic index and AP (8) from 1 Jan 2000 to end of 
 %              Daily predicted
 %
-% DATE      : Julian Date
+% JDATE      : Julian Date
 %
-%
+% USETODAYSF107 :
+%              boolean: if true then use today's F10.7 value else use
+%              yesterday's F10.7 value
 %
 
 %% Outputs initializations (sets default values for atmosnrlmsise00)

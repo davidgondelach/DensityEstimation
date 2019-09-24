@@ -1,10 +1,9 @@
 function [eopdata,SOLdata,DTCdata] = loadJB2008SWdata()
+% Read space weather data from file
 
 global const
 SAT_Const
 constants
-% DE430Coeff = load('DE430Coeff.mat');
-% PC = DE430Coeff.DE430Coeff;
 
 % read Earth orientation parameters
 fid = fopen('Data/eop19620101.txt','r');

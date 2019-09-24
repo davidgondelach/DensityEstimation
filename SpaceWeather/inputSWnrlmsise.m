@@ -1,21 +1,20 @@
 function [ SWmatDaily, SWmatMonthlyPred ] = inputSWnrlmsise( swfName )
-%READSW reads space weather file from CelesTrack
-% [  ] = READSW(SWFNAME, JDATE, UTHR)
+%INPUTSWNRLMSISE reads space weather file from CelesTrack and output space
+%weather in the format for the NRLMSISE-00 atmosphere model
+% [  ] = READSW(SWFNAME)
 %
-% Inputs for INPUTSW are:
+% Inputs for INPUTSWNRLMSISE are:
 % SWFNAME   :a string that contains space weather name
 %
-% Outputs for INPUTSW are:
+% Outputs for INPUTSWNRLMSISE are:
 % SWMATDAILY : 
 %              matrix for F10.7Daily, F10.7Average, magnetic index
 %              Daily observed and predicted AP (8)
-%              from 1 Jan 2000 to end of Daily predicted
+%              from start of historic to end of Daily predicted
 %
 % SWMATMONTHLYPRED : 
 %              matrix for Monthly predicted F10.7Daily, F10.7Average
-%              Magnetic index and AP (8) from 1 Jan 2000 to end of 
-%              Daily predicted
-%
+%              Magnetic index and AP (8)
 %
 
 %% File processing
