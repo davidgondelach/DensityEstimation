@@ -40,7 +40,7 @@ try
     maxAlt = 10000; % km
     [yrf, mthf, dyf, ~, ~, ~] = datevec(jdf+30-1721058.5);
     
-    downloadTLEs = true;
+    downloadTLEs = false;
     if downloadTLEs
         username = "[USERNAME]"; % www.space-track.org username
         password = "[PASSWORD]"; % www.space-track.org password
@@ -127,82 +127,6 @@ try
     rt = 2*r;
     
     switch DMDmodel
-        case 'MSISE2008'
-            TA = load('DMDc_NRLMSISE_2008.mat');
-            TA = TA.ROMdata;
-            % Converting the dynamic and input matrices from discrete to continuous time
-            [PhiC,Uh,q] = C2D(TA,rt,r); % q is number of inputs
-            % Setup of ROM Modal Interpolation
-            n_slt = 24;
-            n_lat = 20;
-            n_alt = 31;
-            sltm=linspace(0,24,n_slt);
-            latm=linspace(-90,90,n_lat);
-            altm=linspace(100,700,n_alt);
-            
-            [Inp2] = Comp_Inputs_Var_Celestrak(jd0,jdf+20,SWmatDaily,SWmatMonthlyPred);
-            DenS_Mean = TA.DenS_Mean;
-            maxAtmAlt = 700;
-            
-            clear TA;
-        case 'TIEGCM2008'
-            TA = load('ROM_TIEGCM_2008.mat');
-            [PhiC,Uh] = C2Dtiegcm2008(TA,r);
-            sltm = TA.localsolartime;   n_slt = length(sltm);
-            latm = TA.latitude';        n_lat = length(latm);
-            altm = TA.altitude;         n_alt = length(altm);
-            
-            [Inp2] = Comp_Inputs_Var_Celestrak_TIEGCM(jd0,jdf+20,SWmatDailyTIEGCM,SWmatMonthlyPredTIEGCM);
-            % TODO: FIX!!!
-            Inp2([2 3],:)=Inp2([3 2],:); % Swap Doy and hour
-            
-            DenS_Mean = TA.densityDataLogMean;
-            maxAtmAlt = 500;
-            
-            clear TA;
-        case 'TIEGCM_1997_2008'
-            TA = load('DMDc_1997_2008_Var.mat');
-            % Required SW inputs: [F107; Kp; UT; doy]
-            
-            % Converting the dynamic and input matrices from discrete to continuous time
-            [PhiC,Uh,q] = C2D(TA,rt,r); % q is number of inputs
-            
-            [InpTemp] = Comp_Inputs_Var_Celestrak_TIEGCM(jd0,jdf+20,SWmatDailyTIEGCM,SWmatMonthlyPredTIEGCM);
-            Inp2 = [InpTemp(1,:); InpTemp(5,:); InpTemp(6,:); InpTemp(3,:); InpTemp(2,:)];
-            
-            % Setup of ROM Modal Interpolation
-            n_slt = 24;
-            n_lat = 20;
-            n_alt = 16;
-            sltm=linspace(0,24,n_slt);
-            latm=linspace(-90,90,n_lat);
-            altm=linspace(100,450,n_alt);
-            DenS_Mean = TA.DenS_Mean;
-            maxAtmAlt = 500;
-            
-            clear TA TI InpTemp;
-        case 'TIE_GCM_ROM'
-            TA = load(fullfile('..','HS-DMDc_TIEGCM-2019','TIE_GCM_ROM.mat'));
-            
-            % Converting the dynamic and input matrices from discrete to continuous time
-            [PhiC,Uh,q] = C2D(TA,rt,r); % q is number of inputs
-            PhiC = double(PhiC);
-            Uh = double(Uh);
-            % Required SW inputs: [F107; Kp; UT; doy]
-            [InpTemp] = Comp_Inputs_Var_Celestrak_TIEGCM(jd0,jdf+20,SWmatDailyTIEGCM,SWmatMonthlyPredTIEGCM);
-            Inp2 = [InpTemp(1,:); InpTemp(5,:); InpTemp(6,:); InpTemp(3,:); InpTemp(2,:)];
-            
-            % Setup of ROM Modal Interpolation
-            n_slt = 24;
-            n_lat = 20;
-            n_alt = 16;
-            sltm=linspace(0,24,n_slt);
-            latm=linspace(-90,90,n_lat);
-            altm=linspace(100,450,n_alt);
-            DenS_Mean = zeros(n_slt*n_lat*n_alt,1);
-            maxAtmAlt = 500;
-            
-            clear TA TI InpTemp;
         case 'JB2008_1999_2010'
             TA = load('JB2008_1999_2010_ROM_r100.mat');
             

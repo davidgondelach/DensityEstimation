@@ -38,7 +38,6 @@ addpath( 'JB2008' );
 addpath( 'ROMDensityModels' );
 addpath( 'SpaceWeather' );
 addpath( 'TLEdata' );
-addpath( fullfile('..','..','DMDc_Density_example') );
 addpath( fullfile(spicePath,'src','mice') );
 addpath( fullfile(spicePath,'lib') );
 
