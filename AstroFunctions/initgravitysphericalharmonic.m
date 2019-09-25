@@ -17,9 +17,6 @@ function [GM, Re, maxdeg, C_gravmod, S_gravmod, sF_gravmod]= initgravityspherica
 %   [GX GY GZ] = GRAVITYSPHERICALHARMONIC( P, 'Custom', DEGREE, {DATAFILE DFREADER}, ACTION )   
 %
 %   Inputs for spherical harmonic gravity are:
-%   P        :a M-by-3 array of Planet-Centered Planet-Fixed coordinates in
-%            meters where the z-axis is positive towards the North Pole. For
-%            Earth this would be ECEF coordinates.
 %   MODEL    :a string specifying the planetary model:
 %            'EGM2008' (Earth), 'EGM96' (Earth), 'JGM-3' (Earth),'LP100K' 
 %            (Moon), 'LP165P' (Moon), 'GMM2B' (Mars), 'Custom', or 
@@ -45,20 +42,6 @@ function [GM, Re, maxdeg, C_gravmod, S_gravmod, sF_gravmod]= initgravityspherica
 %            gravitational parameter in meters cubed per second squared,
 %            planet equatorial radius in meters, maximum degree, and the
 %            normalized spherical harmonic coefficient matrices, C and S.
-%   ACTION   :a string to determine action for out of range input. Specify
-%            if out of range input invokes a 'Warning', 'Error', or no
-%            action ('None'). The default is 'Warning'.
-%
-%   Output calculated for the spherical harmonic gravity includes:
-%   GX     :an array of M gravity values in the x-axis of the
-%          Planet-Centered Planet-Fixed coordinates in meters per second
-%          squared.
-%   GY     :an array of M gravity values in the y-axis of the
-%          Planet-Centered Planet-Fixed coordinates in meters per second
-%          squared. 
-%   GZ     :an array of M gravity values in the z-axis of the
-%          Planet-Centered Planet-Fixed coordinates in meters per second
-%          squared. 
 %
 %   Limitations:                                                           
 %
@@ -70,65 +53,6 @@ function [GM, Re, maxdeg, C_gravmod, S_gravmod, sF_gravmod]= initgravityspherica
 %   surface can probably be done with negligible error.  The spherical
 %   harmonic gravity model is not valid for radial positions less than
 %   planetary surface. 
-%
-%   Examples:                                                              
-%
-%   Calculate the gravity in the x-axis at the equator on the surface of
-%   Earth, using the 120 degree model of EGM2008 with warning actions:
-%       gx = gravitysphericalharmonic( [-6378.1363e3 0 0] ) 
-%
-%   Calculate the gravity at 25000 meters over the south pole of Earth using
-%   the 70 degree model of EGM96 with error actions: 
-%       [gx, gy, gz] = gravitysphericalharmonic( [0 0 -6381.751e3], 'EGM96', 'Error' )   
-%
-%   Calculate the gravity at 15000 meters over the equator and 11000 meters
-%   over the north pole using a 30th order GMM2B Mars model with warning
-%   actions:
-%       p  = [2412.648e3 -2412.648e3 0; 0 0 3376.2e3]
-%       [gx, gy, gz] = gravitysphericalharmonic( p, 'GMM2B', 30, 'Warning' )   
-%
-%   Calculate the gravity at 15000 meters over the equator and 11000 meters
-%   over the north pole using a 60th degree custom planetary model with no
-%   actions:  
-%       p       = [2412.648e3 -2412.648e3 0; 0 0 3376e3]
-%       [gx, gy, gz] = gravitysphericalharmonic( p, 'custom', 60, ...
-%                       {'GMM2BC80_SHA.txt' @astReadSHAFile}, 'None' )
-%
-%   See also GRAVITYWGS84, GRAVITYCENTRIFUGAL, GRAVITYZONAL, GEOIDEGM96
-
-%   Copyright 2009-2011 The MathWorks, Inc.
-%   $Revision: 1.1.6.9.2.1 $  $Date: 2011/01/13 20:01:11 $
-
-%   References:  
-%   [1] Vallado, D. A., "Fundamentals of Astrodynamics and Applications",
-%       McGraw-Hill, New York, 1997.  
-%   [2] NIMA TR8350.2: "Department of Defense World Geodetic System 1984,
-%       Its Definition and Relationship with Local Geodetic Systems." 
-%   [3] Konopliv, A. S., S. W. Asmar, E. Carranza, W. L. Sjogen, D. N.
-%       Yuan., "Recent Gravity Models as a Result of the Lunar Prospector
-%       Mission", Icarus, Vol. 150, no. 1, pp 1?18, 2001.                    
-%   [4] Lemoine, F. G., D. E. Smith, D.D. Rowlands, M.T. Zuber, G. A.
-%       Neumann, and D. S. Chinn, "An improved solution of the gravity
-%       field of Mars (GMM-2B) from Mars Global Surveyor", J. Geophys. Res.,
-%       Vol. 106, No. E10, pp 23359-23376, October 25, 2001.   
-%   [5] Kenyon S., J. Factor, N. Pavlis, and S. Holmes, "Towards the Next
-%       Earth Gravitational Model", Society of Exploration Geophysicists
-%       77th Annual Meeting, San Antonio, Texas, September 23-28, 2007.
-%   [6] Pavlis, N.K., S.A. Holmes, S.C. Kenyon, and J.K. Factor, "An Earth
-%       Gravitational Model to Degree 2160: EGM2008", presented at the 2008
-%       General Assembly of the European Geosciences Union, Vienna,
-%       Austria, April 13-18, 2008. 
-%   [7] Grueber, T., and A. Kohl, "Validation of the EGM2008 Gravity Field
-%       with GPS-Leveling and Oceanographic Analyses", presented at the IAG
-%       International Symposium on Gravity, Geoid & Earth Observation 2008,
-%       Chania, Greece, June 23-27, 2008.
-%   [8] F?rste, C., Flechtner, F., Schmidt, R., K?nig, R., Meyer, U.,
-%       Stubenvoll, R., Rothacher, M., Barthelmes, F., Neumayer, H.,
-%       Biancale, R., Bruinsma, S., Lemoine, J.M., Loyer, S., "A Mean
-%       Global Gravity Field Model From the Combination of Satellite
-%       Mission and Altimetry/Gravmetry Surface Data - EIGEN-GL04C",
-%       Geophysical Research Abstracts, Vol. 8, 03462, 2006 
-%       http://icgem.gfz-potsdam.de/ICGEM/
 
 error(nargchk(1, 5, nargin,'struct'));
 

@@ -20,33 +20,6 @@ function [gx, gy, gz]= rungravitysphericalharmonic( p )
 %   P        :a M-by-3 array of Planet-Centered Planet-Fixed coordinates in
 %            meters where the z-axis is positive towards the North Pole. For
 %            Earth this would be ECEF coordinates.
-%   MODEL    :a string specifying the planetary model:
-%            'EGM2008' (Earth), 'EGM96' (Earth), 'LP100K' (Moon), 'LP165P'
-%            (Moon), 'GMM2B' (Mars), 'Custom', or 'EIGENGL04C' (EARTH). The 
-%            default is 'EGM2008'. 
-%   DEGREE   :a scalar value specifying the degree and order of the      
-%            harmonic gravity model. For 'EGM2008', the maximum degree and
-%            order is 2159 and the default degree and order is 120.   For
-%            'EGM96', the maximum degree and order is 360 and the default
-%            degree and order is 70.  For 'LP100K', the maximum degree and
-%            order is 100 and the default degree and order is 60.  For
-%            'LP165P', the maximum degree and order is 165 and the default
-%            degree and order is 60.  For 'GMM2B', the maximum degree and
-%            order is 80 and the default degree and order is 60.  For
-%            'Custom', the default degree and order is the maximum degree. 
-%            For 'EIGENGL04C', the maximum degree and order is 360 and the 
-%            default degree and order is 70.
-%   DATAFILE :a file containing the planetary gravitational parameter,
-%            planet equatorial radius, maximum degree, and normalized 
-%            spherical harmonic coefficient matrices.
-%   DFREADER :a function handle to an MATLAB(R) function which reads
-%            DATAFILE.  The MATLAB function must output planetary
-%            gravitational parameter in meters cubed per second squared,
-%            planet equatorial radius in meters, maximum degree, and the
-%            normalized spherical harmonic coefficient matrices, C and S.
-%   ACTION   :a string to determine action for out of range input. Specify
-%            if out of range input invokes a 'Warning', 'Error', or no
-%            action ('None'). The default is 'Warning'.
 %
 %   Output calculated for the spherical harmonic gravity includes:
 %   GX     :an array of M gravity values in the x-axis of the
@@ -69,34 +42,6 @@ function [gx, gy, gz]= rungravitysphericalharmonic( p )
 %   surface can probably be done with negligible error.  The spherical
 %   harmonic gravity model is not valid for radial positions less than
 %   planetary surface. 
-%
-%   Examples:                                                              
-%
-%   Calculate the gravity in the x-axis at the equator on the surface of
-%   Earth, using the 120 degree model of EGM2008 with warning actions:
-%       gx = gravitysphericalharmonic( [-6378.1363e3 0 0] ) 
-%
-%   Calculate the gravity at 25000 meters over the south pole of Earth using
-%   the 70 degree model of EGM96 with error actions: 
-%       [gx, gy, gz] = gravitysphericalharmonic( [0 0 -6381.751e3], 'EGM96', 'Error' )   
-%
-%   Calculate the gravity at 15000 meters over the equator and 11000 meters
-%   over the north pole using a 30th order GMM2B Mars model with warning
-%   actions:
-%       p  = [2412.648e3 -2412.648e3 0; 0 0 3376.2e3]
-%       [gx, gy, gz] = gravitysphericalharmonic( p, 'GMM2B', 30, 'Warning' )   
-%
-%   Calculate the gravity at 15000 meters over the equator and 11000 meters
-%   over the north pole using a 60th degree custom planetary model with no
-%   actions:  
-%       p       = [2412.648e3 -2412.648e3 0; 0 0 3376e3]
-%       [gx, gy, gz] = gravitysphericalharmonic( p, 'custom', 60, ...
-%                       {'GMM2BC80_SHA.txt' @astReadSHAFile}, 'None' )
-%
-%   See also GRAVITYWGS84, GRAVITYCENTRIFUGAL, GRAVITYZONAL, GEOIDEGM96
-
-%   Copyright 2009-2011 The MathWorks, Inc.
-%   $Revision: 1.1.6.9.2.1 $  $Date: 2011/01/13 20:01:11 $
 
 %   References:  
 %   [1] Vallado, D. A., "Fundamentals of Astrodynamics and Applications",
@@ -141,22 +86,7 @@ r = sqrt( sum( p.^2, 2 ));
                                                                            
 % Check if geocentric radius is less than equatorial (reference) radius
 if r < Re
-    switch action
-        case 'none'
-            % no message
-        case 'warning'
-            warning('aero:gravitysphericalharmonic:lessThanEquatorialRadius', ...
-                ['Radial position is less than equatorial radius '...
-                'of planetary model, %g.'], Re);
-        case 'error'
-            error('aero:gravitysphericalharmonic:lessThanEquatorialRadius', ...
-                ['Radial position is less than equatorial radius '...
-                'of planetary model, %g.'], Re);
-        otherwise
-            error('aero:gravitysphericalharmonic:unknownActionRadius',...
-                ['Action for out of range input must be None, '...
-                'Warning or Error']);
-    end
+    error('Radial position is less than equatorial radius of planetary model, %g.', Re);
 end
 
 % Compute geocentric latitude
