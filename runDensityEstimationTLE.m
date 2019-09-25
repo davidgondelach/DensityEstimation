@@ -152,7 +152,7 @@ try
             TA = load('TIEGCM_1997_2008_ROM_r100.mat');
             
             % Converting the dynamic and input matrices from discrete to continuous time
-            [PhiC,Uh,Qrom] = C2D_TIEGCM_new(TA,r);
+            [PhiC,Uh,Qrom] = C2D_TIEGCM(TA,r);
             
             TIEGCM_SWdata = TA.SWdataFull;
             [Inp2] = Comp_Inputs_TIEGCM(jd0,jdf,TIEGCM_SWdata);
