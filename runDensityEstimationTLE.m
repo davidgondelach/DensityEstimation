@@ -52,29 +52,19 @@ try
 
     
     %% Load BC estimates
-    medianBCestimates = ...
-        [11822,	0.00907878223;      13770,	0.0119172584;   15354,	0.0104993335;
-        16111,	0.00911779416;      24547,	0.0367465478;   25735,	0.0062344914;
-        28822	0.01529856281;      35867,	0.0095876238;   38710,	0.0094608777;
-        38998,	0.00797160419;      39452,	0.0052089979;   43020,	0.0190711952;
-        24102,	0.028206654;        24487,	0.034716499;    27115,	0.030552165;
-        36801,	0.069746786;        39029,	0.026673532;    39454,	0.007618455;
-        42735,	0.019392673;        42911,	0.020974571;    43019,	0.010199617;
-        41970,  0.04034201043;      42874,  0.015484171;    42880,  0.0149184721; %42735, 42911, 43019 not available at 1 Jan 2017
-        01843,	0.0117362;          10363,	0.0134046;      11056,	0.0122993;
-        11156,	0.0123989;          11216,	0.0115763;      11269,	0.0126358;
-        24645,	0.0124980;          25018,	0.0141775;      25738,	0.0188309;
-        07337,  0.01120;            08744,  0.01117;        12138,  0.01115;        12388,  0.01121; % Bowman (2004) - A Method For Computing Accurate Daily Atmospheric Density Values From Satellite Drag Data
+    % Ballistic coefficient data: NORAD ID, BC
+    BCdata = [... 
+        07337,  0.01120;        08744,  0.01117;        12138,  0.01115;        12388,  0.01121; % Bowman (2004) - A Method For Computing Accurate Daily Atmospheric Density Values From Satellite Drag Data
     
-        00022,  0.02338;            00060,  0.02266;        00063,  0.01486; % Yurasov 2005 - Density Corrections for the NRLMSIS-00
-        00165,  0.05326;            00229,  0.05220;        02611,  0.02314;
-        14483,  0.01130;            22875,  0.00824;        23853,  0.00846;
-        25769,  0.00972;            26929,  0.01542;        26996,  0.01016;
+        00022,  0.02338;        00060,  0.02266;        00063,  0.01486;                         % Yurasov 2005 - Density Corrections for the NRLMSIS-00
+        00165,  0.05326;        00229,  0.05220;        02611,  0.02314;
+        14483,  0.01130;        22875,  0.00824;        23853,  0.00846;
+        25769,  0.00972;        26929,  0.01542;        26996,  0.01016;
     
-        00614,  0.01463;        00750,  0.06846;        01370,  0.11858;        01808,  0.13997; % Emmert 2006 - Thermospheric density 2002?2004
+        00614,  0.01463;        00750,  0.06846;        01370,  0.11858;        01808,  0.13997; % Emmert 2006 - Thermospheric density 2002-2004
         02016,  0.02879;        02129,  0.04307;        02153,  0.03329;        02622,  0.02240;
         03553,  0.13464;        04221,  0.02201;        04330,  0.02634;        06073,  0.00378;
-        20774,  0.01168;        23278,  0.01168;        25233,  0.01734;        26405,  0.00477; %26405=0.00514 (Emmert 2006), 26405=0.00440 (Lu 2017 - Estimation of ballistic coefficients)
+        20774,  0.01168;        23278,  0.01168;        25233,  0.01734;        26405,  0.00477; % BC_26405=0.00514 (Emmert 2006), BC_26405=0.00440 (Lu 2017 - Estimation of ballistic coefficients)
         27391,  0.00697;        27392,  0.00693];
     
     for i=1:length(selectedObjects)
@@ -82,10 +72,9 @@ try
         indexObject = find([objects.noradID]==ID);
         newObjects(i) = objects(indexObject);
         
-        indexBC = find(medianBCestimates(:,1)==ID);
-        BCestimates(i) = medianBCestimates(indexBC,2);
+        indexBC = find(BCdata(:,1)==ID);
+        BCestimates(i) = BCdata(indexBC,2);
     end
-    
     objects = newObjects;
     
     nop = length(objects);
@@ -215,11 +204,10 @@ try
         x0g(svs*i) = BCestimates(i) * 1000;
     end
     
-    % Compute the Initial Atmosphere State from MSIS
+    % Compute the Initial Atmosphere State from JB2008
     UT = hr*3600+mn*60+sc;
     
-    % Space weather data
-    [ f107A, f107, ap ] = computeSWnrlmsise( SWmatDaily, SWmatMonthlyPred, jd0 );
+    % Grid points
     sltx = reshape(SLTm,size(SLTm,1)*size(SLTm,2)*size(SLTm,3),1);
     latx = reshape(LATm,size(SLTm,1)*size(SLTm,2)*size(SLTm,3),1);
     altx = reshape(ALTm,size(SLTm,1)*size(SLTm,2)*size(SLTm,3),1);

@@ -1,13 +1,13 @@
 function [objectDataSorted, covMEEerrors] = checkSelfConsistencyTLEs(objects, mu, jdate0TLEs, objectIDlabels)
-%checkSelfConsistencyTLEs Summary of this function goes here
-%   Detailed explanation goes here
+%checkSelfConsistencyTLEs Compute and plot difference in position and in
+%modified equinoctial elements taking from two different TLEs
 
 noo = length(objects);
 
 covMEEerrors = zeros(noo*6,1);
 objectData = zeros(noo,9);
 
-figure(234);
+figure;
 % Self consistency check
 for i=1:noo
     clear diffR diffV epoch diffEpochInMin mee1 mee2 diffMee
@@ -48,7 +48,7 @@ for i=1:noo
     % Plot difference in MEE
     diffMee(1:end,6) = wrapToPi(diffMee(1:end,6));
     diffMeeTimes = [objects(i).satrecs(1:end-1).jdsatepoch] - jdate0TLEs;
-    figure(234);
+    
     subplot(2,3,1); plot(diffMeeTimes,diffMee(1:end,1)); hold on; %plot(diffMeeTimes([1,end]),3*stdMEEerrors(1)*ones(1,2),'--k'); plot(diffMeeTimes([1,end]),-3*stdMEEerrors(1)*ones(1,2),'--k');
     subplot(2,3,2); plot(diffMeeTimes,diffMee(1:end,2)); hold on; %plot(diffMeeTimes([1,end]),3*stdMEEerrors(2)*ones(1,2),'--k'); plot(diffMeeTimes([1,end]),-3*stdMEEerrors(2)*ones(1,2),'--k');
     subplot(2,3,3); plot(diffMeeTimes,diffMee(1:end,3)); hold on; %plot(diffMeeTimes([1,end]),3*stdMEEerrors(3)*ones(1,2),'--k'); plot(diffMeeTimes([1,end]),-3*stdMEEerrors(3)*ones(1,2),'--k');
@@ -56,7 +56,6 @@ for i=1:noo
     subplot(2,3,5); plot(diffMeeTimes,diffMee(1:end,5)); hold on; %plot(diffMeeTimes([1,end]),3*stdMEEerrors(5)*ones(1,2),'--k'); plot(diffMeeTimes([1,end]),-3*stdMEEerrors(5)*ones(1,2),'--k');
     subplot(2,3,6); plot(diffMeeTimes,diffMee(1:end,6)); hold on; %plot(diffMeeTimes([1,end]),3*stdMEEerrors(6)*ones(1,2),'--k'); plot(diffMeeTimes([1,end]),-3*stdMEEerrors(6)*ones(1,2),'--k');
 end
-figure(234);
 xlabeltext1 = 'Time [days]';
 subplot(2,3,1);  xlabel(xlabeltext1); ylabel('\Delta p [km]');
 subplot(2,3,2);  xlabel(xlabeltext1); ylabel('\Delta f [-]');
