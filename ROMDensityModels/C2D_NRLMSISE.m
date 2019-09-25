@@ -1,4 +1,4 @@
-function [PhiC,Uh,Qrom] = C2D_NRLMSISE_betterSWdata(TA,r)
+function [PhiC,Uh,Qrom] = C2D_NRLMSISE(TA,r)
 
 %% Reduced-order data
 Uh = TA.U100(:,1:r);

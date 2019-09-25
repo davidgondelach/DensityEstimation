@@ -1,4 +1,4 @@
-function [Inputs] = Comp_Inputs_NRLMSISE_1997_2008_betterSWdata(jd0,jdf,SWmatDaily,SWmatMonthlyPred)
+function [Inputs] = Comp_Inputs_NRLMSISE_1997_2008(jd0,jdf,SWmatDaily,SWmatMonthlyPred)
 
 tt = jd0:1/24:jdf;
 nofPoints = length(tt);

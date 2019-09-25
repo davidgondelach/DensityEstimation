@@ -1,7 +1,8 @@
-function [ f ] = Propagation11_ODE_Var_FullGrav_New(t,xp,AC,BC,Inp,rR,noo,svs,F_U,M_U,maxAtmAlt,et0,jdate0)
-% Propagation11_ODE_Var_FullGrav_New - Compute object and ROM state derivative
+function [ f ] = computeDerivative_PosVelBcRom(t,xp,AC,BC,Inp,rR,noo,svs,F_U,M_U,maxAtmAlt,et0,jdate0)
+% COMPUTEDERIVATIVE_POSVELBCROM - Compute derivatives of objects
+% position, velocity and BC, and reduced-order state
 %
-% Syntax:  [ f ] = Propagation11_ODE_Var_FullGrav_New(t,xp,AC,BC,Inp,rR,noo,svs,F_U,M_U,maxAtmAlt,et0,jdate0)
+% Syntax:  [ f ] = computeDerivative_PosVelBcRom(t,xp,AC,BC,Inp,rR,noo,svs,F_U,M_U,maxAtmAlt,et0,jdate0)
 %
 % Inputs:
 %   t           current time w.r.t. et0 [s]

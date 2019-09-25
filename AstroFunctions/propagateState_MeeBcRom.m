@@ -1,4 +1,4 @@
-function [xf_mee] = propagateStateMEE_FullGravDrag_New(x0_mee,t0,tf,AC,BC,Inp2,r,nop,svs,F_U,M_U,maxAtmAlt,et0,jdate0)
+function [xf_mee] = propagateState_MeeBcRom(x0_mee,t0,tf,AC,BC,Inp2,r,nop,svs,F_U,M_U,maxAtmAlt,et0,jdate0)
 
 mu = 398600.4415;
 
@@ -12,7 +12,7 @@ for k = 1:nop
 end
 
 opts = odeset('RelTol',1e-10,'AbsTol',1e-10,'Events', @(t,x) isdecayed(t,x,nop*size(x0_mee,2),svs));
-[~,xf_out]=ode113(@(t,x) Propagation11_ODE_Var_FullGrav_New(t,x,AC,BC,Inp2,r,nop,svs,F_U,M_U,maxAtmAlt,et0,jdate0),[t0 tf],xx_pv,opts);
+[~,xf_out]=ode113(@(t,x) computeDerivative_PosVelBcRom(t,x,AC,BC,Inp2,r,nop,svs,F_U,M_U,maxAtmAlt,et0,jdate0),[t0 tf],xx_pv,opts);
 xf_pv = reshape(xf_out(end,:)',nop*svs+r,[]);
 
 xf_mee = xf_pv;

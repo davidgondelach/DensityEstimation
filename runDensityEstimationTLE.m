@@ -296,7 +296,7 @@ try
     
     % Set state propagation and measurement functions
     et0  = cspice_str2et(strcat([num2str(jed2date(jd0),'%d %d %d %d %d %.10f') 'UTC']));
-    stateFnc = @(xx,t0,tf) propagateStateMEE_FullGravDrag_New(xx,t0,tf,AC,BC,Inp2,r,nop,svs,F_U,M_U,maxAtmAlt,et0,jd0);
+    stateFnc = @(xx,t0,tf) propagateState_MeeBcRom(xx,t0,tf,AC,BC,Inp2,r,nop,svs,F_U,M_U,maxAtmAlt,et0,jd0);
     measurementFcn = @(xx) fullmee2mee(xx,nop,svs);
     
     % Run Unscented Kalman filter estimation
