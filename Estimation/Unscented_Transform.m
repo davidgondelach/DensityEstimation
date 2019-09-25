@@ -1,11 +1,9 @@
 function [Wm,Wc,L,lambda] = Unscented_Transform(x0f)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
 
 L=length(x0f);
 alpha = 1;
 beta = 2;
-kappa = 3 - L; %0;
+kappa = 3 - L;
 lambda = alpha^2*(L + kappa) - L;
 
 W0m = lambda/(L + lambda);

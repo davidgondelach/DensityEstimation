@@ -23,11 +23,6 @@ Inputs(17,1:end-1) = Inputs(4,2:end); % F10
 Inputs(18,1:end-1) = Inputs(6,2:end); % S10
 Inputs(19,1:end-1) = Inputs(8,2:end); % XM10
 Inputs(20,1:end-1) = Inputs(10,2:end); % Y10
-% % Add future (now+1hr) SW data
-% Inputs(16,1:end-1) = Inputs(4,2:end); % F10
-% Inputs(17,1:end-1) = Inputs(6,2:end); % S10
-% Inputs(18,1:end-1) = Inputs(8,2:end); % XM10
-% Inputs(19,1:end-1) = Inputs(10,2:end); % Y10
 
 % Add future (now+1hr) SW data for last epoch
 [yyUTC, mmUTC, ddUTC, hhUTC, mnmnUTC, ssUTC] = datevec(jdf+1/24-1721058.5);
@@ -39,10 +34,6 @@ Inputs(17,end) = F10; % F10
 Inputs(18,end) = S10; % S10
 Inputs(19,end) = XM10; % XM10
 Inputs(20,end) = Y10; % Y10
-% Inputs(16,end) = F10; % F10
-% Inputs(17,end) = S10; % S10
-% Inputs(18,end) = XM10; % XM10
-% Inputs(19,end) = Y10; % Y10
 
 % Add quadratic DSTDTC
 Inputs(21,:) = Inputs(12,:).^2; % DSTDTC^2 (now)

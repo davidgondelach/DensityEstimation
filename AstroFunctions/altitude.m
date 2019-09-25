@@ -1,5 +1,5 @@
 function [alt] = altitude(r)
-%UNTITLED Summary of this function goes here
+%ALTITUDE Compute altitude w.r.t. oblate Earth
 %   r = Cartesian position vector in km
 
 % Flattening of Earth and Earth radius constants

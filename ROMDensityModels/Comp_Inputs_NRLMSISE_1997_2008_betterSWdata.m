@@ -1,6 +1,4 @@
 function [Inputs] = Comp_Inputs_NRLMSISE_1997_2008_betterSWdata(jd0,jdf,SWmatDaily,SWmatMonthlyPred)
-% Compute the Inputs to take the state to meaurement epoch and for
-% computing the true trajectory
 
 tt = jd0:1/24:jdf;
 nofPoints = length(tt);

@@ -9,10 +9,12 @@
 % email: davidgondelach@gmail.com
 % Sep 2019; Last revision: 24-Sep-2019
 
+
 %------------- BEGIN CODE --------------
 
 clearvars;
 clearvars -global;
+
 
 %% SETTINGS
 
@@ -29,8 +31,9 @@ r  = 10;                        % Reduced order
 % NORAD catalog IDs of objects used for estimation
 selectedObjects = [63;165;614;2153;2622;4221;6073;7337;8744;12138;12388;14483;20774;23278;27391;27392;26405]; % 17 objects
 
+
 %% SET PATHS
-spicePath = fullfile('[SPICE TOOLKIT DIRECTORY]','mice');
+spicePath = fullfile('[SPICE TOOLKIT DIRECTORY]','mice'); % SPECIFY YOUR SPICE TOOLBOX DIRECTORY HERE!
 
 addpath( 'AstroFunctions' );
 addpath( 'Estimation' );
@@ -40,6 +43,7 @@ addpath( 'SpaceWeather' );
 addpath( 'TLEdata' );
 addpath( fullfile(spicePath,'src','mice') );
 addpath( fullfile(spicePath,'lib') );
+
 
 %% LOAD KERNELS, GRAVITY MODEL, EARTH ORIENTATION PARAMETERS AND SGP4
 % Load SPICE
@@ -59,9 +63,11 @@ EOPpath = fullfile('Data','EOP-All.txt');
 % Setup the SGP4 propagator.
 loadSGP4();
 
+
 %% PERFORM DENSITY ESTIMATION
 plotFigures = true;
 
 runDensityEstimationTLE(yr,mth,dy,nofDays,DMDmodel,r,selectedObjects,plotFigures);
+
 
 %------------- END OF CODE --------------

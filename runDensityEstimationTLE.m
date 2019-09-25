@@ -226,7 +226,7 @@ try
     
     % Density
     [eopdata,SOLdata,DTCdata] = loadJB2008SWdata();
-    Den = zeros(numel(sltx),1);
+    Den_JB2008 = zeros(numel(sltx),1);
     for i = 1:numel(sltx)
         lon = 15*(sltx(i)-UT/3600);
         

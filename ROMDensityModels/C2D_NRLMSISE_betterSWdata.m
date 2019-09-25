@@ -9,19 +9,12 @@ X2 = TA.densityDataLogVarROM100(1:r,2:end);
 
 %% Space weather inputs: [doy; UThrs; F10a; F10; ap; ap; ap; ap; ap; ap; ap; ap;]
 U1 = TA.SWdataFull(1:end-1,:)';
-% Add future values F10 and Kp
+% Add future values F10 and ap
 U1(12:20,:) = TA.SWdataFull(2:end,3:11)';
-% % Add quadratic Kp
-% U1(21,:) = transpose(TA.SWdataFull(1:end-1,6).^2);
-% U1(22,:) = transpose(TA.SWdataFull(2:end,6).^2);
-% % % Add mixed terms F10*Kp
-% U1(23,:) = TA.SWdataFull(1:end-1,4)'.*TA.SWdataFull(1:end-1,6)';
-% U1(24,:) = TA.SWdataFull(2:end,4)'.*TA.SWdataFull(2:end,6)';
-
-
+% Add quadratic ap
 U1(21:29,:) = transpose(TA.SWdataFull(1:end-1,3:11).^2);
 U1(30:38,:) = transpose(TA.SWdataFull(2:end,3:11).^2);
-% % Add mixed terms F10*Kp
+% % Add mixed terms F10*ap
 U1(39,:) = TA.SWdataFull(1:end-1,4)'.*TA.SWdataFull(1:end-1,6)';
 U1(40,:) = TA.SWdataFull(2:end,4)'.*TA.SWdataFull(2:end,6)';
 

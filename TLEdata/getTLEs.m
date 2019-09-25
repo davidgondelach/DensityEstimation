@@ -1,6 +1,4 @@
 function [TLEstruct] = getTLEs(filename)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
 
 global whichconst; % The gravity constant that we're using.
 

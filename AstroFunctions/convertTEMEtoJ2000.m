@@ -1,6 +1,4 @@
 function [reci, veci] = convertTEMEtoJ2000(rteme, vteme, jdate)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
 
 global EOPMat;
 [ ~, ~, dut1, ~, ddpsi, ddeps, dat ] = computeEOP_Celestrak( EOPMat, jdate );
