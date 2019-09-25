@@ -170,12 +170,12 @@ try
             
             clear TA;
         case 'NRLMSISE_1997_2008'
-            TA = load('NRLMSISE_1997_2008_ROM_r100_betterSWdata.mat');
+            TA = load('NRLMSISE_1997_2008_ROM_r100.mat');
             
             % Converting the dynamic and input matrices from discrete to continuous time
-            [PhiC,Uh,Qrom] = C2D_NRLMSISE_betterSWdata(TA,r);
+            [PhiC,Uh,Qrom] = C2D_NRLMSISE(TA,r);
             
-            [Inp2] = Comp_Inputs_NRLMSISE_1997_2008_betterSWdata(jd0,jdf,SWmatDaily,SWmatMonthlyPred);
+            [Inp2] = Comp_Inputs_NRLMSISE_1997_2008(jd0,jdf,SWmatDaily,SWmatMonthlyPred);
 
             % Setup of ROM Modal Interpolation
             sltm = TA.localSolarTimes;
