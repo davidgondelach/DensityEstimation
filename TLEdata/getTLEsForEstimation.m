@@ -1,4 +1,12 @@
 function [objects] = getTLEsForEstimation(startYear, startMonth, startDay, endYear, endMonth, endDay, selectedObjects)
+%getTLEsForEstimation - Read TLE data from file
+%
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+%------------- BEGIN CODE --------------
 
 relativeDir = 'TLEdata';
 
@@ -27,3 +35,4 @@ end
 
 end
 
+%------------- END OF CODE --------------

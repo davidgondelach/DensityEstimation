@@ -9,6 +9,15 @@ function [X_est,Pv] = UKF(X_est,Meas,time,stateFnc,measurementFcn,P,RM,Q)
 %   RM: observation noise
 %   Q: process noise
 
+% First version by P. Metha, 2018
+
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+%------------- BEGIN CODE --------------
+
 % Unscented Filter Parameter
 % Compute the Sigma Points
 [Wm,Wc,L,lam] = Unscented_Transform(X_est);
@@ -82,3 +91,4 @@ end
 
 end
 
+%------------- END OF CODE --------------

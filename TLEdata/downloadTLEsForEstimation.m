@@ -1,4 +1,12 @@
 function [objects] = downloadTLEsForEstimation(username, password, startYear, startMonth, startDay, endYear, endMonth, endDay, maxAlt, selectedObjects)
+%downloadTLEsForEstimation - Download TLE data
+%
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+%------------- BEGIN CODE --------------
 
 curlCmd = "curl -o TLEdata/estimationObjects.tle https://www.space-track.org/ajaxauth/login -d ";
 usernameCmd = strcat("'identity=",username);
@@ -25,3 +33,4 @@ filename = fullfile('TLEdata','estimationObjects.tle');
 
 end
 
+%------------- END OF CODE --------------

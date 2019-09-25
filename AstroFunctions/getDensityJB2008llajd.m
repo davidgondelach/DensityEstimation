@@ -1,4 +1,12 @@
 function [rho] = getDensityJB2008llajd(lon,lat,alt,jdate)
+%getDensityJB2008llajd - Compute density using JB2008 density model
+
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+%------------- BEGIN CODE --------------
 
 persistent eopdata SOLdata DTCdata
 if isempty(DTCdata)
@@ -21,3 +29,4 @@ rho = rho * 1e9; % to kg/km^3
 
 end
 
+%------------- END OF CODE --------------

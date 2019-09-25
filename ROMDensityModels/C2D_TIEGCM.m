@@ -1,4 +1,12 @@
-function [PhiC,Uh,Qrom] = C2D_TIEGCM_new(TA,r)
+function [PhiC,Uh,Qrom] = C2D_TIEGCM(TA,r)
+%C2D_TIEGCM - Compute reduced-order dynamic density model based on TIE-GCM
+
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+%------------- BEGIN CODE --------------
 
 %% Reduced-order data
 Uh = TA.U100(:,1:r);
@@ -43,3 +51,4 @@ Qrom = cov(errPred');
 
 end
 
+%------------- END OF CODE --------------

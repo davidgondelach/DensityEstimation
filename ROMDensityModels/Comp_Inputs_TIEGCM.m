@@ -1,4 +1,12 @@
 function [Inputs] = Comp_Inputs_TIEGCM(jd0,jdf,TIEGCMSWdata)
+%Comp_Inputs_TIEGCM - Compute space weather inputs for ROM-TIEGCM model
+
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+%------------- BEGIN CODE --------------
 
 tt = jd0:1/24:jdf;
 nofPoints = length(tt);
@@ -28,3 +36,4 @@ Inputs(12,:) = Inputs(8,:).*Inputs(7,:); % Kp*F10 (now+1hr)
 
 end
 
+%------------- END OF CODE --------------

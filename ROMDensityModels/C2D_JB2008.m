@@ -1,4 +1,12 @@
 function [PhiC,Uh,Qrom] = C2D_JB2008(TA,r)
+%C2D_JB2008 - Compute reduced-order dynamic density model based on JB2008
+
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+%------------- BEGIN CODE --------------
 
 %% Reduced-order data
 Uh = TA.U100(:,1:r);
@@ -46,3 +54,4 @@ Qrom = cov(errPred');
 
 end
 
+%------------- END OF CODE --------------

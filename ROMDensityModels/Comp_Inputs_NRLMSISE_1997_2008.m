@@ -1,4 +1,13 @@
 function [Inputs] = Comp_Inputs_NRLMSISE_1997_2008(jd0,jdf,SWmatDaily,SWmatMonthlyPred)
+%Comp_Inputs_NRLMSISE_1997_2008 - Compute space weather inputs for
+%ROM-NRLMSISE model
+
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+%------------- BEGIN CODE --------------
 
 tt = jd0:1/24:jdf;
 nofPoints = length(tt);
@@ -35,3 +44,4 @@ Inputs(41,:) = Inputs(14,:).*Inputs(16,:);
 
 end
 
+%------------- END OF CODE --------------

@@ -1,6 +1,13 @@
 function [meeObs] = generateObservationsMEE(objects,obsEpochs,GM_kms)
-%generateObservationsMEE Generate observations in MEE at specified
-%observation epochs
+%generateObservationsMEE - Generate observations in modified equinoctial 
+%elements at specified observation epochs
+
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+%------------- BEGIN CODE --------------
 
 nofObjects = length(objects);
 nofObs = length(obsEpochs);
@@ -21,3 +28,5 @@ for i=1:nofObjects
 end
 
 end
+
+%------------- END OF CODE --------------
