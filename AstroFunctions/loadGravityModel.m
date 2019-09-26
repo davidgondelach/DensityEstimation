@@ -1,8 +1,8 @@
-function [ ] = loadGravityModel( gravitymodel, gravmodeldegree )
+function [ ] = loadGravityModel( gravmodeldegree )
 
 % Initialize gravity model
 global GM Re gravdegree C_gravmodel S_gravmodel sF_gravmod
-[GM, Re, gravdegree, C_gravmodel, S_gravmodel, sF_gravmod]= initgravitysphericalharmonic(gravitymodel,gravmodeldegree);
+[GM, Re, gravdegree, C_gravmodel, S_gravmodel, sF_gravmod]= initgravitysphericalharmonic(gravmodeldegree);
 
 % Set Earth constants
 global Earth_radius Earth_mass gravconst
