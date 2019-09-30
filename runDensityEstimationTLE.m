@@ -46,8 +46,8 @@ try
     % Download or read TLE data
     downloadTLEs = false;
     if downloadTLEs
-        username = "[USERNAME]"; % www.space-track.org username
-        password = "[PASSWORD]"; % www.space-track.org password
+        username = "[USERNAME]"; % *** Specify your www.space-track.org username here! ***
+        password = "[PASSWORD]"; % *** Specify your www.space-track.org password here! ***
         [objects] = downloadTLEsForEstimation(username, password, yr, mth, 1, yrf, mthf, dyf, maxAlt, selectedObjects);
     else
         [objects] = getTLEsForEstimation(yr, mth, 1, yrf, mthf, dyf, selectedObjects);
@@ -115,107 +115,9 @@ try
     end
     
     
-    %% Generate reduced-order density models
+    %% Load reduced-order density models
+    [AC,BC,Uh,F_U,DenS_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = loadROMdensityModel(DMDmodel,r,jd0,jdf);
     
-    switch DMDmodel
-        case 'JB2008_1999_2010'
-            TA = load('JB2008_1999_2010_ROM_r100.mat');
-            
-            % Compute reduced-order dynamic density model:
-            % PhiC contains continuous-time dynamic and input matrices
-            % Uh contains the POD spatial modes
-            % Qrom is the covariance matrix of ROM prediction error
-            [PhiC,Uh,Qrom] = C2D_JB2008(TA,r);
-            
-            % Compute the space weather inputs in the estimation period
-            [eopdata,SOLdata,DTCdata] = loadJB2008SWdata();
-            [Inp2] = Comp_Inputs_JB2008(jd0,jdf+20,eopdata,SOLdata,DTCdata);
-            
-            % Setup of ROM Modal Interpolation
-            sltm=TA.localSolarTimes;
-            latm=TA.latitudes;
-            altm=TA.altitudes;
-            n_slt = length(sltm);
-            n_lat = length(latm);
-            n_alt = length(altm);
-            
-            % Mean density
-            DenS_Mean = TA.densityDataMeanLog;
-            % Maximum altitude of ROM density model
-            maxAtmAlt = 800;
-            
-            clear TA;
-        case 'TIEGCM_1997_2008_new'
-            TA = load('TIEGCM_1997_2008_ROM_r100.mat');
-            
-            % Compute reduced-order dynamic density model:
-            % PhiC contains continuous-time dynamic and input matrices
-            % Uh contains the POD spatial modes
-            % Qrom is the covariance matrix of ROM prediction error
-            [PhiC,Uh,Qrom] = C2D_TIEGCM(TA,r);
-            
-            % Compute the space weather inputs in the estimation period
-            TIEGCM_SWdata = TA.SWdataFull;
-            [Inp2] = Comp_Inputs_TIEGCM(jd0,jdf,TIEGCM_SWdata);
-            
-            % Setup of ROM Modal Interpolation
-            sltm = TA.localSolarTimes;
-            latm = TA.latitudes;
-            altm = TA.altitudes;
-            n_slt = length(sltm);
-            n_lat = length(latm);
-            n_alt = length(altm);
-            
-            % Mean density
-            DenS_Mean = TA.densityDataMeanLog;
-            % Maximum altitude of ROM density model
-            maxAtmAlt = 500;
-            
-            clear TA;
-        case 'NRLMSISE_1997_2008'
-            TA = load('NRLMSISE_1997_2008_ROM_r100.mat');
-            
-            % Compute reduced-order dynamic density model:
-            % PhiC contains continuous-time dynamic and input matrices
-            % Uh contains the POD spatial modes
-            % Qrom is the covariance matrix of ROM prediction error
-            [PhiC,Uh,Qrom] = C2D_NRLMSISE(TA,r);
-            
-            % Compute the space weather inputs in the estimation period
-            [Inp2] = Comp_Inputs_NRLMSISE_1997_2008(jd0,jdf,SWmatDaily,SWmatMonthlyPred);
-
-            % Setup of ROM Modal Interpolation
-            sltm = TA.localSolarTimes;
-            latm = TA.latitudes;
-            altm = TA.altitudes;
-            n_slt = length(sltm);
-            n_lat = length(latm);
-            n_alt = length(altm);
-            
-            % Mean density
-            DenS_Mean = TA.densityDataMeanLog;
-            % Maximum altitude of ROM density model
-            maxAtmAlt = 700;
-            
-            clear TA;
-        otherwise
-            warning('No valid DMDc model selected!')
-    end
-    % Generate full 3D grid in local solar time, latitude and altitude
-    [SLTm,LATm,ALTm]=ndgrid(sltm,latm,altm);
-    
-    % Generate interpolant for each POD spatial mode in Uh
-    F_U{r} = [];
-    for i = 1:r
-        Uhr = reshape(Uh(:,i),n_slt,n_lat,n_alt); % i-th left singular vector on grid
-        F_U{i} = griddedInterpolant(SLTm,LATm,ALTm,Uhr,'linear','linear'); % Create interpolant of Uhr
-    end
-    % Generate interpolant for the mean density in DenS_Mean
-    Mr = reshape(DenS_Mean,n_slt,n_lat,n_alt);
-    M_U = griddedInterpolant(SLTm,LATm,ALTm,Mr,'linear','linear');
-    % Compute dynamic and input matrices
-    AC = PhiC(1:r,1:r)/3600;
-    BC = PhiC(1:r,r+1:end)/3600;
     
     %% Generate initial state guess
     x0state = initialState;
@@ -257,10 +159,10 @@ try
     % Measurement noise
     RM = [];
     for i = 1:nop
-            RMfactor = max(objects(i).satrecs(1).ecco/0.004,1);
-            RM = [RM; [max(4*objects(i).satrecs(1).ecco,0.0023); RMfactor*3.0e-10; RMfactor*3.0e-10; 1.e-9; 1.e-9; 1e-8]];
+        RMfactor = max(objects(i).satrecs(1).ecco/0.004,1);
+        RM = [RM; [max(4*objects(i).satrecs(1).ecco,0.0023); RMfactor*3.0e-10; RMfactor*3.0e-10; 1.e-9; 1.e-9; 1e-8]];
     end
-    RM = diag(RM);
+    RM = diag(RM); % Convert to matrix with covariances on the diagonal
     
     %% Process noise Q and Initial Covariance P
     
@@ -274,6 +176,7 @@ try
         Pv(svs*(i-1)+4) = RM(6*(i-1)+4,6*(i-1)+4);
         Pv(svs*(i-1)+5) = RM(6*(i-1)+5,6*(i-1)+5);
         Pv(svs*(i-1)+6) = RM(6*(i-1)+6,6*(i-1)+6);
+        
         % Initial covariance for ballistic coefficient
         Pv(svs*(i-1)+7) = (x0g(svs*i) * 0.005)^2; % 0.5% BC error (std)
         if ismember(objects(i).noradID,[7337;8744;12138;12388;22;60;63;165;229;2611;14483;22875;23853;25769;26929;26996;614;750;1370;1808;2016;2129;2153;2622;3553;4221;4330;6073;20774;23278;25233;26405;27391;27392])
@@ -289,6 +192,7 @@ try
         Qv(svs*(i-1)+4) = 1e-14; 
         Qv(svs*(i-1)+5) = 1e-14; 
         Qv(svs*(i-1)+6) = 1e-12;
+        
         % Process noise for ballistic coefficient
         Qv(svs*(i-1)+7) = 1e-16; % 1-sigma error: 1e-8 per 1 hour
     end
@@ -301,18 +205,22 @@ try
     Qv(end-r+1:end) = diag(Qrom);
     
     % Initial covariance and Process noise matrices
-    P = diag(Pv);
-    Q = diag(Qv);
+    P = diag(Pv); % Convert to matrix with covariances on the diagonal
+    Q = diag(Qv); % Convert to matrix with covariances on the diagonal
     
-    % Estimated state
-    X_est = x0g; % Initial state
     
-    % Initial time
+    %% Density estimation
+    % State estimate
+    X_est = x0g; % Initial state guess
+    
+    % Initial Ephemeris Time (ET): ET is the number of seconds past the 
+    % epoch of the J2000 reference frame in the time system known as 
+    % Barycentric Dynamical Time (TDB).
     et0  = cspice_str2et(strcat([num2str(jed2date(jd0),'%d %d %d %d %d %.10f') 'UTC']));
     
     % Set state propagation and measurement functions
-    stateFnc = @(xx,t0,tf) propagateState_MeeBcRom(xx,t0,tf,AC,BC,Inp2,r,nop,svs,F_U,M_U,maxAtmAlt,et0,jd0);
-    measurementFcn = @(xx) fullmee2mee(xx,nop,svs);
+    stateFnc = @(xx,t0,tf) propagateState_MeeBcRom(xx,t0,tf,AC,BC,SWinputs,r,nop,svs,F_U,M_U,maxAtmAlt,et0,jd0);
+    measurementFcn = @(xx) fullmee2mee(xx,nop,svs); % Function to convert from state with MEE,BC,ROM to only MEE
     
     % Run Unscented Kalman filter estimation
     [X_est,Pv] = UKF(X_est,Meas,time,stateFnc,measurementFcn,P,RM,Q);

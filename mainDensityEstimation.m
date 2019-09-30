@@ -17,6 +17,8 @@ clearvars -global;
 
 
 %% SETTINGS
+% Specify the date, reduced-order model, reduction order and objects to be
+% used to estimation here.
 
 % Estimation window
 yr      = 2002; % Year
@@ -25,15 +27,17 @@ dy      = 1;    % Day
 nofDays = 30;   % Number of days
 
 % Reduced-order model
-DMDmodel = 'JB2008_1999_2010';  % Name of reduced-order density model
+DMDmodel = 'JB2008_1999_2010';  % Name of reduced-order density model: JB2008_1999_2010, NRLMSISE_1997_2008 or TIEGCM_1997_2008
 r  = 10;                        % Reduced order
 
 % NORAD catalog IDs of objects used for estimation
-selectedObjects = [63;165;614;2153;2622;4221;6073;7337;8744;12138;12388;14483;20774;23278;27391;27392;26405]; % 17 objects
+% Default: 17 objects: [63;165;614;2153;2622;4221;6073;7337;8744;12138;12388;14483;20774;23278;27391;27392;26405]
+selectedObjects = [63;165;614;2153;2622;4221;6073;7337;8744;12138;12388;14483;20774;23278;27391;27392;26405];
 
 
 %% SET PATHS
-spicePath = fullfile('[SPICE TOOLKIT DIRECTORY]','mice'); % SPECIFY YOUR SPICE TOOLBOX DIRECTORY HERE!
+% *** SPECIFY YOUR SPICE TOOLBOX DIRECTORY HERE! ***
+spicePath = fullfile('[SPICE TOOLKIT DIRECTORY]','mice'); 
 
 addpath( 'AstroFunctions' );
 addpath( 'Estimation' );
@@ -51,9 +55,8 @@ kernelpath  = fullfile('Data','kernel.txt');
 loadSPICE(kernelpath);
 
 % Load gravity model
-gravitymodel     = 'EGM2008';
 gravmodeldegree  = 20;
-loadGravityModel( gravitymodel, gravmodeldegree );
+loadGravityModel( gravmodeldegree );
 
 % Load Earth orientation parameters (needed for TEME to ECI transformation)
 global EOPMat
@@ -69,5 +72,9 @@ plotFigures = true;
 
 runDensityEstimationTLE(yr,mth,dy,nofDays,DMDmodel,r,selectedObjects,plotFigures);
 
+
+%% Clear memory
+% Clear cspice memory
+cspice_kclear;
 
 %------------- END OF CODE --------------
