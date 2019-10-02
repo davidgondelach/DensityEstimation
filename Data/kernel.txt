@@ -1,18 +1,17 @@
 \begindata
 
-KERNELS_TO_LOAD = ('Data/naif0012.tls',
+KERNELS_TO_LOAD = ('Data/latest_leapseconds.tls',
                    'Data/de430.bsp',
                    'Data/pck00010.tpc',
                    'Data/earth_fixed.tf', 
                    'Data/earthstns_itrf93_050714.bsp',
                    'Data/earth_070425_370426_predict.bpc',
                    'Data/earth_720101_070426.bpc',
-                   'Data/earth_000101_190618_190328.bpc',
                    'Data/earth_latest_high_prec.bpc')
 \begintext
 
 DESCRIPTION:
-naif0012.tls                        Leapseconds kernel
+latest_leapseconds.tls              Leapseconds kernel
 de430.bsp                           Planet and Lunar Ephemerides
 pck00010.tpc                        Orientation of main bodies & physical constants (PCK)
 earth_latest_high_prec.bpc          Required to load ITRF93 (high precision Earth-fixed frame)
