@@ -1,5 +1,6 @@
-function [PhiC,Uh,Qrom] = C2D_JB2008(TA,r)
-%C2D_JB2008 - Compute reduced-order dynamic density model based on JB2008
+function [PhiC,Uh,Qrom] = generateROM_JB2008(TA,r)
+%generateROM_JB2008 - Compute reduced-order dynamic density model based on 
+% JB2008 density data
 
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics

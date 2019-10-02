@@ -116,7 +116,7 @@ try
     
     
     %% Load reduced-order density models
-    [AC,BC,Uh,F_U,DenS_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = loadROMdensityModel(DMDmodel,r,jd0,jdf);
+    [AC,BC,Uh,F_U,DenS_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = generateROMdensityModel(DMDmodel,r,jd0,jdf);
     
     
     %% Generate initial state guess

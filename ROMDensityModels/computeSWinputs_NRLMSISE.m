@@ -1,6 +1,5 @@
-function [Inputs] = Comp_Inputs_NRLMSISE_1997_2008(jd0,jdf,SWmatDaily,SWmatMonthlyPred)
-%Comp_Inputs_NRLMSISE_1997_2008 - Compute space weather inputs for
-%ROM-NRLMSISE model
+function [Inputs] = computeSWinputs_NRLMSISE(jd0,jdf,SWmatDaily,SWmatMonthlyPred)
+%computeSWinputs_NRLMSISE - Compute space weather inputs for ROM-NRLMSISE model
 
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics

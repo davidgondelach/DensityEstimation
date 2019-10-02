@@ -1,5 +1,5 @@
-function [AC,BC,Uh,F_U,DenS_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = loadROMdensityModel(DMDmodel,r,jd0,jdf)
-%loadROMdensityModel - Load reduced-order density model
+function [AC,BC,Uh,F_U,DenS_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = generateROMdensityModel(DMDmodel,r,jd0,jdf)
+%generateROMdensityModel - Generate reduced-order density model
 
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
@@ -16,11 +16,11 @@ switch DMDmodel
         % PhiC contains continuous-time dynamic and input matrices
         % Uh contains the POD spatial modes
         % Qrom is the covariance matrix of ROM prediction error
-        [PhiC,Uh,Qrom] = C2D_JB2008(TA,r);
+        [PhiC,Uh,Qrom] = generateROM_JB2008(TA,r);
         
         % Compute the space weather inputs in the estimation period
         [eopdata,SOLdata,DTCdata] = loadJB2008SWdata();
-        [SWinputs] = Comp_Inputs_JB2008(jd0,jdf+20,eopdata,SOLdata,DTCdata);
+        [SWinputs] = computeSWinputs_JB2008(jd0,jdf+20,eopdata,SOLdata,DTCdata);
         
         % Setup of ROM Modal Interpolation
         sltm=TA.localSolarTimes;
@@ -43,11 +43,11 @@ switch DMDmodel
         % PhiC contains continuous-time dynamic and input matrices
         % Uh contains the POD spatial modes
         % Qrom is the covariance matrix of ROM prediction error
-        [PhiC,Uh,Qrom] = C2D_TIEGCM(TA,r);
+        [PhiC,Uh,Qrom] = generateROM_TIEGCM(TA,r);
         
         % Compute the space weather inputs in the estimation period
         TIEGCM_SWdata = TA.SWdataFull;
-        [SWinputs] = Comp_Inputs_TIEGCM(jd0,jdf,TIEGCM_SWdata);
+        [SWinputs] = computeSWinputs_TIEGCM(jd0,jdf,TIEGCM_SWdata);
         
         % Setup of ROM Modal Interpolation
         sltm = TA.localSolarTimes;
@@ -70,12 +70,12 @@ switch DMDmodel
         % PhiC contains continuous-time dynamic and input matrices
         % Uh contains the POD spatial modes
         % Qrom is the covariance matrix of ROM prediction error
-        [PhiC,Uh,Qrom] = C2D_NRLMSISE(TA,r);
+        [PhiC,Uh,Qrom] = generateROM_NRLMSISE(TA,r);
         
         % Compute the space weather inputs in the estimation period
         SWpath = fullfile('Data','SW-All.txt');
         [ SWmatDaily, SWmatMonthlyPred ] = inputSWnrlmsise( SWpath );
-        [SWinputs] = Comp_Inputs_NRLMSISE_1997_2008(jd0,jdf,SWmatDaily,SWmatMonthlyPred);
+        [SWinputs] = computeSWinputs_NRLMSISE(jd0,jdf,SWmatDaily,SWmatMonthlyPred);
         
         % Setup of ROM Modal Interpolation
         sltm = TA.localSolarTimes;

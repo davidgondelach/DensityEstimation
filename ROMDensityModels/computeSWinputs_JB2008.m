@@ -1,5 +1,5 @@
-function [Inputs] = Comp_Inputs_JB2008(jd0,jdf,eopdata,SOLdata,DTCdata)
-%Comp_Inputs_JB2008 - Compute space weather inputs for ROM-JB2008 model
+function [Inputs] = computeSWinputs_JB2008(jd0,jdf,eopdata,SOLdata,DTCdata)
+%computeSWinputs_JB2008 - Compute space weather inputs for ROM-JB2008 model
 
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics

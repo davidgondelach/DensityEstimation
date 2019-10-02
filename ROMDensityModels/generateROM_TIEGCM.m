@@ -1,5 +1,6 @@
-function [PhiC,Uh,Qrom] = C2D_TIEGCM(TA,r)
-%C2D_TIEGCM - Compute reduced-order dynamic density model based on TIE-GCM
+function [PhiC,Uh,Qrom] = generateROM_TIEGCM(TA,r)
+%generateROM_TIEGCM - Compute reduced-order dynamic density model based on 
+% TIE-GCM density data
 
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics

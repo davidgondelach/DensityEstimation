@@ -1,5 +1,5 @@
-function [Inputs] = Comp_Inputs_TIEGCM(jd0,jdf,TIEGCMSWdata)
-%Comp_Inputs_TIEGCM - Compute space weather inputs for ROM-TIEGCM model
+function [Inputs] = computeSWinputs_TIEGCM(jd0,jdf,TIEGCMSWdata)
+%computeSWinputs_TIEGCM - Compute space weather inputs for ROM-TIEGCM model
 
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics

@@ -1,6 +1,6 @@
-function [PhiC,Uh,Qrom] = C2D_NRLMSISE(TA,r)
-%C2D_NRLMSISE - Compute reduced-order dynamic density model based on
-%NRLMSISE-00
+function [PhiC,Uh,Qrom] = generateROM_NRLMSISE(TA,r)
+%generateROM_NRLMSISE - Compute reduced-order dynamic density model based
+% on NRLMSISE-00 density data
 
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
