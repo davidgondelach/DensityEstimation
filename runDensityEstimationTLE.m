@@ -55,33 +55,25 @@ try
 
     
     %% Load BC estimates
-    % Ballistic coefficient data: NORAD ID, BC
-    BCdata = [... 
-        07337,  0.01120;        08744,  0.01117;        12138,  0.01115;        12388,  0.01121; % Bowman (2004) - A Method For Computing Accurate Daily Atmospheric Density Values From Satellite Drag Data
+    % Ballistic coefficient data: NORAD ID and BC
+    BCfilePath = fullfile('Data','BCdata.txt');
+    [BCdata] = loadBCdata( BCfilePath );
     
-        00022,  0.02338;        00060,  0.02266;        00063,  0.01486;                         % Yurasov 2005 - Density Corrections for the NRLMSIS-00
-        00165,  0.05326;        00229,  0.05220;        02611,  0.02314;
-        14483,  0.01130;        22875,  0.00824;        23853,  0.00846;
-        25769,  0.00972;        26929,  0.01542;        26996,  0.01016;
-    
-        00614,  0.01463;        00750,  0.06846;        01370,  0.11858;        01808,  0.13997; % Emmert 2006 - Thermospheric density 2002-2004
-        02016,  0.02879;        02129,  0.04307;        02153,  0.03329;        02622,  0.02240;
-        03553,  0.13464;        04221,  0.02201;        04330,  0.02634;        06073,  0.00378;
-        20774,  0.01168;        23278,  0.01168;        25233,  0.01734;        26405,  0.00477; % BC_26405=0.00514 (Emmert 2006), BC_26405=0.00440 (Lu 2017 - Estimation of ballistic coefficients)
-        27391,  0.00697;        27392,  0.00693];
-    
+    % Extract orbital data and BC data for selected objects
     for i=1:length(selectedObjects)
+        % NORAD ID
         ID = selectedObjects(i);
-        indexObject = find([objects.noradID]==ID);
-        newObjects(i) = objects(indexObject);
-        
-        indexBC = find(BCdata(:,1)==ID);
-        BCestimates(i) = BCdata(indexBC,2);
+        % Orbital data
+        newObjects(i) = objects([objects.noradID]==ID);
+        % Ballistic coefficient
+        BCestimates(i) = BCdata(BCdata(:,1)==ID,2);
     end
     objects = newObjects;
     
+    % Number of objects
     nop = length(objects);
     
+    % Cell with object ID text strings
     objectIDlabels = cell(1, nop);
     for i=1:nop
         objectIDlabels(i) = {num2str(objects(i).noradID)};
