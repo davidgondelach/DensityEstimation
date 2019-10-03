@@ -23,7 +23,11 @@ This code is under development and may not directly run after installation. The 
 
 
 Acknowlegdments:
+
+Contributions by Dr. Richard Linares and Dr. Piyush Mehta in the design and implementation of the code are acknowledged.
+
 The MATLAB code for Jacchia-Bowman 2008 model was developed by Meysam Mahooti (copyright 2018) and was downloaded from https://www.mathworks.com/matlabcentral/fileexchange/56163-jacchia-bowman-atmospheric-density-model (version 2.0.0.0).
+
 The MATLAB code for the SGP4 model and several time and reference frame routines was developed by David Vallado (and others) and was downloaded from https://celestrak.com/software/vallado-sw.php.
 
 
