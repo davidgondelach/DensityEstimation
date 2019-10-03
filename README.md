@@ -1,6 +1,7 @@
 # DensityEstimation
 Matlab code for global thermospheric density estimation using two-line element data.
 
+
 Copyright © 2019 by David Gondelach
 
 This program is free software: you can redistribute it and/or modify
@@ -25,6 +26,17 @@ Acknowlegdments:
 The MATLAB code for Jacchia-Bowman 2008 model was developed by Meysam Mahooti (copyright 2018) and was downloaded from https://www.mathworks.com/matlabcentral/fileexchange/56163-jacchia-bowman-atmospheric-density-model (version 2.0.0.0).
 The MATLAB code for the SGP4 model and several time and reference frame routines was developed by David Vallado (and others) and was downloaded from https://celestrak.com/software/vallado-sw.php.
 
+
+References:
+The density modeling and estimation techniques are described in:
+@misc{gondelach2019realtime,
+    title={Real-Time Thermospheric Density Estimation Via Two-Line-Element Data Assimilation},
+    author={David Gondelach and Richard Linares},
+    year={2019},
+    eprint={1910.00695},
+    archivePrefix={arXiv}
+}
+see https://arxiv.org/abs/1910.00695
 
 
 Installation instructions:
