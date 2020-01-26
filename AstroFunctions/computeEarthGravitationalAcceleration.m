@@ -1,58 +1,55 @@
-function [gx, gy, gz]= rungravitysphericalharmonic( pos )
-%  RUNGRAVITYSPHERICALHARMONIC Compute gravitational acceleration using
-%   spherical harmonic representation of Earth gravity.
-%   [GX GY GZ] = RUNGRAVITYSPHERICALHARMONIC( P ) implements the mathematical
-%   representation of spherical harmonic Earth gravity based on
-%   Earth gravitational potential. Using P, a M-by-3 array of
-%   Earth-Centered Earth-Fixed coordinates, GX, GY and GZ, arrays of M
-%   gravity values in the x-axis, y-axis and z-axis of the Earth-Centered
-%   Earth-Fixed coordinates are calculated.
+function [aa_grav_x, aa_grav_y, aa_grav_z] = computeEarthGravitationalAcceleration( rr_ecef )
+%  COMPUTEEARTHGRAVITATIONALACCELERATION - Compute Earth gravitational 
+%   acceleration using spherical harmonic expansion of Earth's geopotential
+%   in Earth-Centered Earth-Fixed coordinates [m/s^2].
 %
-%   [GX, GY, GZ] = RUNGRAVITYSPHERICALHARMONIC( P )
+%   [aa_grav_x, aa_grav_y, aa_grav_z] = computeEarthGravitationalAcceleration( rr_ecef )
 %
 %   Inputs:
-%   P        :a M-by-3 array of Earth-Centered Earth-Fixed (ECEF) coordinates
-%            in meters where the z-axis is positive towards the North Pole.
+%   rr_ecef - position in Earth-Centered Earth-Fixed (ECEF) coordinates
+%            in meters [Mx3].
 %
 %   Outputs:
-%   GX     :an array of M gravity values in the x-axis of the
+%   aa_grav_x - Earth gravitational acceleration in the x-direction of the
 %          Earth-Centered Earth-Fixed coordinates in meters per second
-%          squared.
-%   GY     :an array of M gravity values in the y-axis of the
+%          squared [Mx1].
+%   aa_grav_y - Earth gravitational acceleration in the y-direction of the
 %          Earth-Centered Earth-Fixed coordinates in meters per second
-%          squared.
-%   GZ     :an array of M gravity values in the z-axis of the
+%          squared [Mx1].
+%   aa_grav_z - Earth gravitational acceleration in the z-direction of the
 %          Earth-Centered Earth-Fixed coordinates in meters per second
-%          squared.
+%          squared [Mx1].
 
 %   References:
 %   Vallado, D. A., "Fundamentals of Astrodynamics and Applications", 2001.
 
-if (size( pos, 2) ~= 3)
+% Check that number of columns is equal to 3.
+if (size( rr_ecef, 2) ~= 3)
     error('Input matrix has wrong dimension. Matrix must have 3 columns.');
 end
 
+% Load geopotential constants and coefficients
 global GM Re C_gravmodel S_gravmodel gravdegree sF_gravmod;
 
 C = C_gravmodel;
 S = S_gravmodel;
 
 % Compute geocentric radius
-r = sqrt( sum( pos.^2, 2 ));
+r = sqrt( sum( rr_ecef.^2, 2 ));
 
-% Check if geocentric radius is less than equatorial (reference) radius
+% Check if geocentric radius is less than equatorial radius
 if r < Re
-    error('Radial position is less than equatorial radius of planetary model, %g.', Re);
+    error('Radial position is less than Earth equatorial radius, %g.', Re);
 end
 
 % Compute geocentric latitude
-phic = asin( pos(:,3)./ r );
+phic = asin( rr_ecef(:,3)./ r );
 
 % Compute lambda
-lambda = atan2( pos(:,2), pos(:,1) );
+lambda = atan2( rr_ecef(:,2), rr_ecef(:,1) );
 
-smlambda = zeros( size(pos,1), gravdegree );
-cmlambda = zeros( size(pos,1), gravdegree );
+smlambda = zeros( size(rr_ecef,1), gravdegree );
+cmlambda = zeros( size(rr_ecef,1), gravdegree );
 
 slambda = sin(lambda);
 clambda = cos(lambda);
@@ -68,19 +65,19 @@ end
 
 
 % Compute normalized associated legendre polynomials
-[P] = gravLegendre_( phic, gravdegree );
+[P] = computeLegendrePolynomials( phic, gravdegree );
 
 scaleFactor = sF_gravmod;
 
 % Compute gravity in ECEF coordinates
-[gx, gy, gz] = gravityECEF_( pos, gravdegree, P, C( 1:gravdegree+1, 1:gravdegree+1 ), ...
-    S( 1:gravdegree+1, 1:gravdegree+1 ), smlambda, ...
-    cmlambda, GM, Re, r,scaleFactor );
+[aa_grav_x, aa_grav_y, aa_grav_z] = computeGravity( rr_ecef, gravdegree, P, ...
+    C( 1:gravdegree+1, 1:gravdegree+1 ), S( 1:gravdegree+1, 1:gravdegree+1 ), ...
+    smlambda, cmlambda, GM, Re, r,scaleFactor );
 
 
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    function [P] = gravLegendre_( phi, maxdeg )
-        % gravLegendre_ compute normalized associated legendre polynomials P
+    function [P] = computeLegendrePolynomials( phi, maxdeg )
+        % computeLegendrePolynomials - compute normalized associated legendre polynomials P
         
         P = zeros(maxdeg+3, maxdeg+3, length(phi));
         cphi = cos(pi/2-phi);
@@ -115,8 +112,8 @@ scaleFactor = sF_gravmod;
     end
 
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    function [gx, gy, gz] = gravityECEF_(p,maxdeg,P,C,S,smlambda,cmlambda,GM,Re,r,scaleFactor)
-        % gravityECEF_ compute gravity in Earth-centered Earth-fixed (ECEF) coordinates
+    function [aa_grav_x, aa_grav_y, aa_grav_z] = computeGravity(p,maxdeg,P,C,S,smlambda,cmlambda,GM,Re,r,scaleFactor)
+        % computeGravity - compute Earth gravitational acceleration in Earth-centered Earth-fixed (ECEF) coordinates
         
         rRatio   = Re./r;
         rRatio_n = rRatio;
@@ -150,18 +147,18 @@ scaleFactor = sF_gravmod;
         dUdlambda =  GM./r.*dUdlambdaSumN;
         
         % gravity in ECEF coordinates
-        gx = ((1./r).*dUdr - (p(:,3)./(r.*r.*sqrt(p(:,1).^2 + p(:,2).^2))).*dUdphi).*p(:,1) ...
+        aa_grav_x = ((1./r).*dUdr - (p(:,3)./(r.*r.*sqrt(p(:,1).^2 + p(:,2).^2))).*dUdphi).*p(:,1) ...
             - (dUdlambda./(p(:,1).^2 + p(:,2).^2)).*p(:,2);
-        gy = ((1./r).*dUdr - (p(:,3)./(r.*r.*sqrt(p(:,1).^2 + p(:,2).^2))).*dUdphi).*p(:,2) ...
+        aa_grav_y = ((1./r).*dUdr - (p(:,3)./(r.*r.*sqrt(p(:,1).^2 + p(:,2).^2))).*dUdphi).*p(:,2) ...
             + (dUdlambda./(p(:,1).^2 + p(:,2).^2)).*p(:,1);
-        gz = (1./r).*dUdr.*p(:,3) + ((sqrt(p(:,1).^2 + p(:,2).^2))./(r.*r)).*dUdphi;
+        aa_grav_z = (1./r).*dUdr.*p(:,3) + ((sqrt(p(:,1).^2 + p(:,2).^2))./(r.*r)).*dUdphi;
         
         % special case for poles
         atPole = abs(atan2(p(:,3),sqrt(p(:,1).^2 + p(:,2).^2)))==pi/2;
         if any(atPole)
-            gx(atPole) = 0;
-            gy(atPole) = 0;
-            gz(atPole) = (1./r(atPole)).*dUdr(atPole).*p((atPole),3);
+            aa_grav_x(atPole) = 0;
+            aa_grav_y(atPole) = 0;
+            aa_grav_z(atPole) = (1./r(atPole)).*dUdr(atPole).*p((atPole),3);
         end
         
     end

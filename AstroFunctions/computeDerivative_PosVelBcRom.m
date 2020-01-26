@@ -8,8 +8,10 @@ function [ f ] = computeDerivative_PosVelBcRom(t,xp,AC,BC,SWinputs,r,noo,svs,F_U
 %   t           current time: seconds since et0 [s]
 %   xp          state vector: position and velocity (J2000) and BC of 
 %               multiple objects and reduced order density state
-%   AC          continuous-time state transition matrix
-%   BC          continuous-time input matrix
+%   AC          continuous-time state transition matrix for the reduced 
+%               order density state
+%   BC          continuous-time input matrix for the reduced order density
+%               state dynamics
 %   SWinputs    Space weather inputs
 %   r           number of reduced order modes [integer]
 %   noo         number of objects [integer]
@@ -31,7 +33,7 @@ function [ f ] = computeDerivative_PosVelBcRom(t,xp,AC,BC,SWinputs,r,noo,svs,F_U
 
 %------------- BEGIN CODE --------------
 
-% Convert state to single column
+% Convert state from single column to multi-column matrix
 x = reshape(xp,svs*noo+r,[]);
 
 % Date and time
@@ -59,36 +61,37 @@ for i = 1:noo
     mag_v_ecef = sqrt( sum( vv_ecef.^2, 1 )); % Magnitude of velocity in ECEF
     
     % Gravitational accelerations in ECEF [m/s^2]
-    [accGrav_ecefx, accGrav_ecefy, accGrav_ecefz] = rungravitysphericalharmonic(rr_ecef'*1000);
+    [aa_grav_ecef_x, aa_grav_ecef_y, aa_grav_ecef_z] = computeEarthGravitationalAcceleration(rr_ecef'*1000);
     
     % Atmospheric densities [kg/m^3]
     % Position in J2000
-    pos = x(svs*(i-1)+1:svs*(i-1)+3,:); 
+    rr_eci = x(svs*(i-1)+1:svs*(i-1)+3,:); 
     % Reduced order density state
     romState = x(end-r+1:end,:); 
     % Compute density using reduced-order density model [kg/m^3]
-    rho = getDensityROM(pos,jdate,romState,r,F_U,M_U,maxAtmAlt);
+    rho = getDensityROM(rr_eci,jdate,romState,r,F_U,M_U,maxAtmAlt);
     
     % Ballistic coefficients (BC) [m^2/(1000kg)]
     b_star = x(svs*i,:);
     
     % Accelerations in ECEF: Earth gravity + drag acceleration [km/s^2]
-    aa_ecef(1,:) = accGrav_ecefx'/1000 - 1/2.*b_star.*rho.*mag_v_ecef.*vv_ecef(1,:);
-    aa_ecef(2,:) = accGrav_ecefy'/1000 - 1/2.*b_star.*rho.*mag_v_ecef.*vv_ecef(2,:);
-    aa_ecef(3,:) = accGrav_ecefz'/1000 - 1/2.*b_star.*rho.*mag_v_ecef.*vv_ecef(3,:);
+    aa_ecef(1,:) = aa_grav_ecef_x'/1000 - 1/2.*b_star.*rho.*mag_v_ecef.*vv_ecef(1,:); % ECEF x-direction
+    aa_ecef(2,:) = aa_grav_ecef_y'/1000 - 1/2.*b_star.*rho.*mag_v_ecef.*vv_ecef(2,:); % ECEF y-direction
+    aa_ecef(3,:) = aa_grav_ecef_z'/1000 - 1/2.*b_star.*rho.*mag_v_ecef.*vv_ecef(3,:); % ECEF z-direction
     
     % Velocities in J2000 frame [km/s]
-    f(svs*(i-1)+1,:) = x(svs*(i-1)+4,:);
-    f(svs*(i-1)+2,:) = x(svs*(i-1)+5,:);
-    f(svs*(i-1)+3,:) = x(svs*(i-1)+6,:);
-    % Accelerations in J2000 frame [km/s^2]
-    f(svs*(i-1)+4:svs*(i-1)+6,:) = xform(1:3,1:3)' * aa_ecef;
-    % BC time derivative is zero
+    f(svs*(i-1)+1,:) = x(svs*(i-1)+4,:); % J2000 x-direction
+    f(svs*(i-1)+2,:) = x(svs*(i-1)+5,:); % J2000 y-direction
+    f(svs*(i-1)+3,:) = x(svs*(i-1)+6,:); % J2000 z-direction
+    % Total accelerations in J2000 frame [km/s^2]
+    % Accelerations in ECEF frame are transformed to J2000 frame
+    f(svs*(i-1)+4:svs*(i-1)+6,:) = xform(1:3,1:3)' * aa_ecef; 
+    % Time derivative of ballistic coefficients is zero
     f(svs*(i-1)+7,:) = 0;
   
 end
 
-% Time derivative of reduced-order density state
+% Time derivative of reduced-order density state: dz/dt = Ac*z + Bc*u
 f(end-r+1:end,:) = AC * x(end-r+1:end,:) + BC * SWinputs;
 
 % Convert state derivative to single column
