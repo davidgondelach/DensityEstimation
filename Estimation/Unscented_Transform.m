@@ -1,9 +1,12 @@
-function [Wm,Wc,L,lambda] = Unscented_Transform(x0f)
+function [Wm,Wc,L,lambda] = Unscented_Transform(x0f,varargin)
 
 L=length(x0f);
 alpha = 1;
 beta = 2;
 kappa = 3 - L;
+if nargin > 1
+    kappa = varargin{1};
+end
 lambda = alpha^2*(L + kappa) - L;
 
 W0m = lambda/(L + lambda);
