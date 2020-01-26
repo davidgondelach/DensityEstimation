@@ -1,34 +1,28 @@
 function [eopdata,SOLdata,DTCdata] = loadJB2008SWdata()
-% Read space weather data from file
+% LOADJB2008SWDATA - Read space weather data and Earth orientation 
+% parameters needed for JB2008 density model from file
+%
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 26-Jan-2020
+
+%------------- BEGIN CODE --------------
 
 global const
-SAT_Const
-constants
 
-% read Earth orientation parameters
-fid = fopen('Data/eop19620101.txt','r');
-%  ----------------------------------------------------------------------------------------------------
-% |  Date    MJD      x         y       UT1-UTC      LOD       dPsi    dEpsilon     dX        dY    DAT
-% |(0h UTC)           "         "          s          s          "        "          "         "     s 
-%  ----------------------------------------------------------------------------------------------------
-eopdata = fscanf(fid,'%i %d %d %i %f %f %f %f %f %f %f %f %i',[13 inf]);
-fclose(fid);
+SAT_Const;
+constants;
 
-% read space weather data
-fid = fopen('Data/SOLFSMY.txt','r');
-%  ------------------------------------------------------------------------
-% | YYYY DDD   JulianDay  F10   F81c  S10   S81c  M10   M81c  Y10   Y81c
-%  ------------------------------------------------------------------------
-SOLdata = fscanf(fid,'%d %d %f %f %f %f %f %f %f %f %f',[11 inf]);
-fclose(fid);
+% Read Earth orientation parameters
+[ eopdata ] = inputEOP_Celestrak_Full( 'Data/EOP-All.txt' );
 
-% READ GEOMAGNETIC STORM DTC VALUE
-fid = fopen('Data/DTCFILE.txt','r');
-%  ------------------------------------------------------------------------
-% | YYYY DDD   DTC1 to DTC24
-%  ------------------------------------------------------------------------
-DTCdata = fscanf(fid,'%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d',[26 inf]);
-fclose(fid);
+% Read space weather data: solar activity indices
+SOLdata = readSOLFSMY('Data/SOLFSMY.txt')';
+
+% Read geomagnetic storm DTC values
+DTCdata = readDTCFILE('Data/DTCFILE.txt')';
 
 end
 
+%------------- END OF CODE --------------
