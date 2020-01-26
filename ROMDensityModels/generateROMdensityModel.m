@@ -1,4 +1,4 @@
-function [AC,BC,Uh,F_U,DenS_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = generateROMdensityModel(DMDmodel,r,jd0,jdf)
+function [AC,BC,Uh,F_U,Dens_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = generateROMdensityModel(DMDmodel,r,jd0,jdf)
 %generateROMdensityModel - Generate reduced-order density model
 
 % Author: David Gondelach
@@ -22,20 +22,9 @@ switch DMDmodel
         [eopdata,SOLdata,DTCdata] = loadJB2008SWdata();
         [SWinputs] = computeSWinputs_JB2008(jd0,jdf+20,eopdata,SOLdata,DTCdata);
         
-        % Setup of ROM Modal Interpolation
-        sltm=TA.localSolarTimes;
-        latm=TA.latitudes;
-        altm=TA.altitudes;
-        n_slt = length(sltm);
-        n_lat = length(latm);
-        n_alt = length(altm);
-        
-        % Mean density
-        DenS_Mean = TA.densityDataMeanLog;
         % Maximum altitude of ROM density model
         maxAtmAlt = 800;
         
-        clear TA;
     case 'TIEGCM_1997_2008'
         TA = load('TIEGCM_1997_2008_ROM_r100.mat');
         
@@ -49,20 +38,9 @@ switch DMDmodel
         TIEGCM_SWdata = TA.SWdataFull;
         [SWinputs] = computeSWinputs_TIEGCM(jd0,jdf,TIEGCM_SWdata);
         
-        % Setup of ROM Modal Interpolation
-        sltm = TA.localSolarTimes;
-        latm = TA.latitudes;
-        altm = TA.altitudes;
-        n_slt = length(sltm);
-        n_lat = length(latm);
-        n_alt = length(altm);
-        
-        % Mean density
-        DenS_Mean = TA.densityDataMeanLog;
         % Maximum altitude of ROM density model
         maxAtmAlt = 500;
         
-        clear TA;
     case 'NRLMSISE_1997_2008'
         TA = load('NRLMSISE_1997_2008_ROM_r100.mat');
         
@@ -77,23 +55,24 @@ switch DMDmodel
         [ SWmatDaily, SWmatMonthlyPred ] = inputSWnrlmsise( SWpath );
         [SWinputs] = computeSWinputs_NRLMSISE(jd0,jdf,SWmatDaily,SWmatMonthlyPred);
         
-        % Setup of ROM Modal Interpolation
-        sltm = TA.localSolarTimes;
-        latm = TA.latitudes;
-        altm = TA.altitudes;
-        n_slt = length(sltm);
-        n_lat = length(latm);
-        n_alt = length(altm);
-        
-        % Mean density
-        DenS_Mean = TA.densityDataMeanLog;
         % Maximum altitude of ROM density model
-        maxAtmAlt = 700;
+        maxAtmAlt = 800;
         
-        clear TA;
     otherwise
         warning('No valid DMDc model selected!')
 end
+        
+% Setup of ROM Modal Interpolation
+sltm = TA.localSolarTimes;
+latm = TA.latitudes;
+altm = TA.altitudes;
+n_slt = length(sltm);
+n_lat = length(latm);
+n_alt = length(altm);
+
+% Mean density
+Dens_Mean = TA.densityDataMeanLog;
+        
 % Generate full 3D grid in local solar time, latitude and altitude
 [SLTm,LATm,ALTm]=ndgrid(sltm,latm,altm);
 
@@ -104,7 +83,7 @@ for i = 1:r
     F_U{i} = griddedInterpolant(SLTm,LATm,ALTm,Uhr,'linear','linear'); % Create interpolant of Uhr
 end
 % Generate interpolant for the mean density in DenS_Mean
-Mr = reshape(DenS_Mean,n_slt,n_lat,n_alt);
+Mr = reshape(Dens_Mean,n_slt,n_lat,n_alt);
 M_U = griddedInterpolant(SLTm,LATm,ALTm,Mr,'linear','linear');
 % Compute dynamic and input matrices
 AC = PhiC(1:r,1:r)/3600;

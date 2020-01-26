@@ -28,6 +28,12 @@ for i=1:nofPoints
     Inputs(6:12,i) = ap';
 end
 
+% Smooth space weather data
+Inputs(4,:) = movmean(Inputs(4,:),[12 11]); % F10: 24h movmean
+Inputs(5,:) = movmean(Inputs(5,:),[12 11]); % F10: 24h movmean
+Inputs(6,:) = movmean(Inputs(6,:),[12 11]); % Ap daily: 24h movmean
+Inputs(7:12,:) = movmean(Inputs(7:12,:)',3)'; % Ap: 3h movmean
+
 % Add future values F10 and Kp
 Inputs(13:21,1:end-1) = Inputs(4:12,2:end);
 [ f107Average, f107Daily, ap ] = computeSWnrlmsise( SWmatDaily, SWmatMonthlyPred, jdf+1/24 );
