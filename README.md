@@ -4,35 +4,24 @@ Matlab code for global thermospheric density estimation using two-line element d
 
 Copyright © 2019 by David Gondelach
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+This code is licensed under the GNU General Public License version 3 - see the [LICENSE.md](LICENSE.md) file for details.
 
 Disclaimer: 
 This code is under development and may not directly run after installation. The code and instructions are being updated.
 
 
-Acknowlegdments:
+### Acknowlegdments
 
-Contributions by Dr. Richard Linares and Dr. Piyush Mehta in the design and implementation of the code are acknowledged.
+The contributions by Dr. Richard Linares and Dr. Piyush Mehta in the design and implementation of the code are acknowledged.
 
 The MATLAB code for Jacchia-Bowman 2008 model was developed by Meysam Mahooti (copyright 2018) and was downloaded from https://www.mathworks.com/matlabcentral/fileexchange/56163-jacchia-bowman-atmospheric-density-model (version 2.0.0.0).
 
 The MATLAB code for the SGP4 model and several time and reference frame routines was developed by David Vallado (and others) and was downloaded from https://celestrak.com/software/vallado-sw.php.
 
 
-References:
+### References
 The density modeling and estimation techniques are described in:
+```
 @misc{gondelach2019realtime,
     title={Real-Time Thermospheric Density Estimation Via Two-Line-Element Data Assimilation},
     author={David Gondelach and Richard Linares},
@@ -40,10 +29,11 @@ The density modeling and estimation techniques are described in:
     eprint={1910.00695},
     archivePrefix={arXiv}
 }
+```
 see https://arxiv.org/abs/1910.00695
 
 
-Installation instructions:
+### Installation instructions
 1. Download the DensityEstimation Matlab code
 2. Download and install SPICE Toolkit for Matlab: https://naif.jpl.nasa.gov/naif/toolkit_MATLAB.html
 3. Set the path to the SPICE Toolkit directory in mainDensityEstimation.m
@@ -55,7 +45,7 @@ Installation instructions:
 9. For each object used for estimation, specify the ballistic coefficient (BC) in the text file: Data/BCdata.txt
 
 
-Run instructions:
+### Run instructions
 1. Open mainDensityEstimation.m
 2. Specify the time window for density estimation by setting the start year, month and day and number of days
 3. (Optionally) select the reduced-order density model and the reduction order (default order: r=10)
@@ -63,13 +53,13 @@ Run instructions:
 5. Run mainDensityEstimation
 
 
-Ephemeris file links:
-latest_leapseconds.tls:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
-de430.bsp:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
-earthstns_itrf93_050714.bsp:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/stations/
-pck00010.tpc, earth_fixed.tf, earth_070425_370426_predict.bpc, earth_720101_070426.bpc, earth_latest_high_prec.bpc:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
+### Ephemeris file links
+* latest_leapseconds.tls:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
+* de430.bsp:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
+* earthstns_itrf93_050714.bsp:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/stations/
+* pck00010.tpc, earth_fixed.tf, earth_070425_370426_predict.bpc, earth_720101_070426.bpc, earth_latest_high_prec.bpc:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
 
 
 
-David Gondelach, Sep 2019
-email: davidgondelach@gmail.com
+David Gondelach, Jan 2020
+email: dgondela@mit.edu
