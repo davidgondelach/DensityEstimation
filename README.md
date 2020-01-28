@@ -22,16 +22,15 @@ The MATLAB code for the SGP4 model and several time and reference frame routines
 ### References
 The density modeling and estimation techniques are described in:
 ```
-@misc{gondelach2019realtime,
-    title={Real-Time Thermospheric Density Estimation Via Two-Line-Element Data Assimilation},
-    author={David Gondelach and Richard Linares},
-    year={2019},
-    eprint={1910.00695},
-    archivePrefix={arXiv}
+@article{gondelach2019realtime,
+  author = {Gondelach, David J. and Linares, Richard},
+  title = {Real-Time Thermospheric Density Estimation Via Two-Line-Element Data Assimilation},
+  journal = {Space Weather},
+  doi = {10.1029/2019SW002356},
+  url = {https://doi.org/10.1029/2019SW002356}
 }
 ```
-see https://arxiv.org/abs/1910.00695
-
+see https://doi.org/10.1029/2019SW002356 (free access).
 
 ### Installation instructions
 1. Download the DensityEstimation Matlab code
