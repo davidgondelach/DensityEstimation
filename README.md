@@ -2,17 +2,17 @@
 Matlab code for global thermospheric density estimation using two-line element data.
 
 
-Copyright © 2019 by David Gondelach
+Copyright © 2020 by David Gondelach
 
-This code is licensed under the GNU General Public License version 3 - see the [LICENSE.md](LICENSE.md) file for details.
+This code is licensed under the GNU General Public License version 3 - see the [LICENSE](LICENSE) file for details.
 
 Disclaimer: 
 This code is under development and may not directly run after installation. The code and instructions are being updated.
 
 
-### Acknowlegdments
+### Acknowledgments
 
-The contributions by Dr. Richard Linares and Dr. Piyush Mehta in the design and implementation of the code are acknowledged.
+The contributions by Dr. Richard Linares and Dr. Piyush M. Mehta in the design and implementation of the code are acknowledged.
 
 The MATLAB code for Jacchia-Bowman 2008 model was developed by Meysam Mahooti (copyright 2018) and was downloaded from https://www.mathworks.com/matlabcentral/fileexchange/56163-jacchia-bowman-atmospheric-density-model (version 2.0.0.0).
 
