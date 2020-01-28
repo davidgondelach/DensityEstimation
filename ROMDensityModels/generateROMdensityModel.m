@@ -1,4 +1,4 @@
-function [AC,BC,Uh,F_U,Dens_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = generateROMdensityModel(DMDmodel,r,jd0,jdf)
+function [AC,BC,Uh,F_U,Dens_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = generateROMdensityModel(ROMmodel,r,jd0,jdf)
 %generateROMdensityModel - Generate reduced-order density model
 
 % Author: David Gondelach
@@ -8,7 +8,7 @@ function [AC,BC,Uh,F_U,Dens_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = g
 
 %------------- BEGIN CODE --------------
 
-switch DMDmodel
+switch ROMmodel
     case 'JB2008_1999_2010'
         TA = load('JB2008_1999_2010_ROM_r100.mat');
         
@@ -59,7 +59,7 @@ switch DMDmodel
         maxAtmAlt = 800;
         
     otherwise
-        warning('No valid DMDc model selected!')
+        warning('No valid ROM model selected!')
 end
         
 % Setup of ROM Modal Interpolation

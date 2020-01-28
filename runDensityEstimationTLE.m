@@ -1,10 +1,55 @@
-function runDensityEstimationTLE(yr,mth,dy,nofDays,DMDmodel,r,selectedObjects,varargin)
-%runDensityEstimationTLE - Estimate thermospheric density using TLE data
-
-% Author: David Gondelach
-% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
-% email: davidgondelach@gmail.com
-% Sep 2019; Last revision: 24-Sep-2019
+function runDensityEstimationTLE(yr,mth,dy,nofDays,ROMmodel,r,selectedObjects,varargin)
+%runDensityEstimationTLE - Estimate thermospheric density using TLE data.
+% 
+%  runDensityEstimationTLE(yr,mth,dy,nofDays,ROMmodel,r,selectedObjects) -
+%     Estimate thermospheric density using TLE data: 
+%     1) load TLE data, 2) load ballistic coefficient data, 3) generate 
+%     observations from TLE data, 4) generate reduced-order density model,
+%     5) initialize reduced-order density state, 6) set initial orbital
+%     state guesses, 7) set measurement and process noise, 8) set initial  
+%     state covariance, 9) run unscented Kalman filter to simultaneously
+%     estimate the orbital states, ballistic coefficients and thermospheric
+%     density from TLE-derived orbit observations.
+% 
+%  runDensityEstimationTLE(yr,mth,dy,nofDays,ROMmodel,r,selectedObjects,plotFigures)
+%     Estimate thermospheric density using TLE data and plot results.
+% 
+%     yr                - start date: year
+%     mth               - start date: month
+%     dy                - start date: day
+%     nofDays           - number of days of estimation window
+%     ROMmodel          - name of reduced-order density model
+%     r                 - dimension of reduced-order density model
+%     selectedObjects   - NORAD IDs of objects used for estimation
+%     plotFigures       - boolean: if true then plot results
+%
+% 
+%     Copyright (C) 2019 by David Gondelach
+% 
+%     This program is free software: you can redistribute it and/or modify
+%     it under the terms of the GNU General Public License as published by
+%     the Free Software Foundation, either version 3 of the License, or
+%     (at your option) any later version.
+% 
+%     This program is distributed in the hope that it will be useful,
+%     but WITHOUT ANY WARRANTY; without even the implied warranty of
+%     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%     GNU General Public License for more details.
+% 
+%     You should have received a copy of the GNU General Public License
+%     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% 
+% 
+%  Author: David Gondelach
+%  Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+%  email: davidgondelach@gmail.com
+%  Sep 2019; Last revision: 21-Jan-2020
+%
+%  Reference:
+%  D.J. Gondelach and R. Linares, "Real-Time Thermospheric Density
+%  Estimation Via Two-Line-Element Data Assimilation", 2019,
+%  https://arxiv.org/abs/1910.00695
+% 
 
 %------------- BEGIN CODE --------------
 
@@ -63,7 +108,7 @@ try
     for i=1:length(selectedObjects)
         % NORAD ID
         ID = selectedObjects(i);
-        % Orbital data
+        % Orbital data (duplicate to ensure data is available)
         newObjects(i) = objects([objects.noradID]==ID);
         % Ballistic coefficient
         BCestimates(i) = BCdata(BCdata(:,1)==ID,2);
@@ -78,17 +123,13 @@ try
     for i=1:nop
         objectIDlabels(i) = {num2str(objects(i).noradID)};
     end
-    
-    %% Check self-consistency of TLE data
-    [objectDataSorted, covMEEerrors] = checkSelfConsistencyTLEs(objects, mu, jdate0TLEs, objectIDlabels);
 
     %% Generate observations from TLE data
     obsEpochs = jd0:dt/86400:jdf;
     [meeMeas] = generateObservationsMEE(objects,obsEpochs,GM_kms);
-    initialState = meeMeas(:,1);
     
     if plotFigures
-        % Plot orbital elements
+        % Plot orbital elements and bstar of TLEs
         figure;
         for i=1:nop
             subplot(2,3,1); plot([objects(i).satrecs.jdsatepoch]-jdate0TLEs,[objects(i).satrecs.a],'.'); hold on;
@@ -108,37 +149,45 @@ try
     
     
     %% Load reduced-order density models
-    [AC,BC,Uh,F_U,DenS_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = generateROMdensityModel(DMDmodel,r,jd0,jdf);
+    [AC,BC,Uh,F_U,Dens_Mean,M_U,SLTm,LATm,ALTm,maxAtmAlt,SWinputs,Qrom] = generateROMdensityModel(ROMmodel,r,jd0,jdf);
     
     
     %% Generate initial state guess
-    x0state = initialState;
+    % Use orbital state from TLE as initial orbital state guess
+    x0orbits = meeMeas(:,1);
     
-    svs = 7;    %Size of state vector for each object [3xpos,3xvel,1xBC]
-    x0g = zeros(svs*nop+r,1);   % initial state guess
+    % Size of state vector for each object [3xpos,3xvel,1xBC]
+    svs = 7;
+    
+    % Initial state guess: Orbits, BCs and reduced order density
+    x0g = zeros(svs*nop+r,1);
     for i = 1:nop
-        x0g(svs*(i-1)+1:svs*(i-1)+6,1) = x0state(6*(i-1)+1:6*(i-1)+6,1);
+        % Orbital state guesses
+        x0g(svs*(i-1)+1:svs*(i-1)+6,1) = x0orbits(6*(i-1)+1:6*(i-1)+6,1);
+        % Ballistic coefficient guesses
         x0g(svs*i) = BCestimates(i) * 1000;
     end
     
-    % Compute the Initial Atmosphere State from JB2008
+    % Compute the initial atmosphere state from JB2008 density model
+    % Seconds of day in UTC
     UT = hr*3600+mn*60+sc;
     
-    % Grid points
+    % Grid points of ROM model
     sltx = reshape(SLTm,size(SLTm,1)*size(SLTm,2)*size(SLTm,3),1);
     latx = reshape(LATm,size(SLTm,1)*size(SLTm,2)*size(SLTm,3),1);
     altx = reshape(ALTm,size(SLTm,1)*size(SLTm,2)*size(SLTm,3),1);
     
-    % Density from JB2008
-    Den_JB2008 = zeros(numel(sltx),1);
+    % Density at grid points according to JB2008 density model
+    Dens_JB2008 = zeros(numel(sltx),1);
     for i = 1:numel(sltx)
+        % Geographical longitude
         lon = 15*(sltx(i)-UT/3600);
-        
-        Den_JB2008(i,1) = getDensityJB2008llajd(lon,latx(i),altx(i),jd0) * 1e-9;
+        % Density from JB2008 density model
+        Dens_JB2008(i,1) = getDensityJB2008llajd(lon,latx(i),altx(i),jd0) * 1e-9;
     end
     
-    % Initialize guess for ROM using JB2008
-    z0_M = Uh'*(log10(Den_JB2008)-DenS_Mean); % JB2008 initialization
+    % Initialize state for ROM using JB2008
+    z0_M = Uh'*(log10(Dens_JB2008)-Dens_Mean); % JB2008 initialization
     
     % Add initial ROM state to initial state guess
     x0g(end-r+1:end,1) = z0_M;
@@ -154,14 +203,14 @@ try
         RMfactor = max(objects(i).satrecs(1).ecco/0.004,1);
         RM = [RM; [max(4*objects(i).satrecs(1).ecco,0.0023); RMfactor*3.0e-10; RMfactor*3.0e-10; 1.e-9; 1.e-9; 1e-8]];
     end
-    RM = diag(RM); % Convert to matrix with covariances on the diagonal
+    RM = diag(RM); % Convert to matrix with variances on the diagonal
     
-    %% Process noise Q and Initial Covariance P
+    %% Process noise Q and initial state covariance P
     
-    Pv = zeros(svs*nop+r,1); % state covariance
-    Qv = zeros(svs*nop+r,1); % process covariance
+    Pv = zeros(svs*nop+r,1); % state variance
+    Qv = zeros(svs*nop+r,1); % process variance
     for i = 1:nop
-        % Initial covariance for orbital state in MEE
+        % Initial variance for orbital state in MEE (equal to measurement noise)
         Pv(svs*(i-1)+1) = RM(6*(i-1)+1,6*(i-1)+1);
         Pv(svs*(i-1)+2) = RM(6*(i-1)+2,6*(i-1)+2);
         Pv(svs*(i-1)+3) = RM(6*(i-1)+3,6*(i-1)+3);
@@ -169,13 +218,8 @@ try
         Pv(svs*(i-1)+5) = RM(6*(i-1)+5,6*(i-1)+5);
         Pv(svs*(i-1)+6) = RM(6*(i-1)+6,6*(i-1)+6);
         
-        % Initial covariance for ballistic coefficient
-        Pv(svs*(i-1)+7) = (x0g(svs*i) * 0.005)^2; % 0.5% BC error (std)
-        if ismember(objects(i).noradID,[7337;8744;12138;12388;22;60;63;165;229;2611;14483;22875;23853;25769;26929;26996;614;750;1370;1808;2016;2129;2153;2622;3553;4221;4330;6073;20774;23278;25233;26405;27391;27392])
-            Pv(svs*(i-1)+7) = (x0g(svs*i) * 0.005)^2; % 0.5% BC error (std)
-        else
-            Pv(svs*(i-1)+7) = (x0g(svs*i) * 0.1)^2; % 10% BC error (std)
-        end
+        % Initial variance for ballistic coefficient
+        Pv(svs*(i-1)+7) = (x0g(svs*i) * 0.01)^2; % 1% BC 1-sigma error
         
         % Process noise for orbital state in MEE
         Qv(svs*(i-1)+1) = 1.5e-8; 
@@ -189,16 +233,17 @@ try
         Qv(svs*(i-1)+7) = 1e-16; % 1-sigma error: 1e-8 per 1 hour
     end
     
-    % Initial covariance for reduced-order density state
+    % Initial variance for reduced-order density state
     Pv(end-r+1:end) = (5e0)*ones(r,1);
     Pv(end-r+1) = 2e1; % First mode
     
     % Process noise for reduced-order density state
+    % Use variance of ROM model 1-hour prediction error w.r.t. the training data
     Qv(end-r+1:end) = diag(Qrom);
     
-    % Initial covariance and Process noise matrices
-    P = diag(Pv); % Convert to matrix with covariances on the diagonal
-    Q = diag(Qv); % Convert to matrix with covariances on the diagonal
+    % Initial state covariance and process noise matrices
+    P = diag(Pv); % Convert to matrix with variances on the diagonal
+    Q = diag(Qv); % Convert to matrix with variances on the diagonal
     
     
     %% Density estimation
@@ -216,59 +261,49 @@ try
     
     % Run Unscented Kalman filter estimation
     [X_est,Pv] = UKF(X_est,Meas,time,stateFnc,measurementFcn,P,RM,Q);
-    Pv(:,1) = diag(P); % Add initial covariance to covariance history
+    Pv(:,1) = diag(P); % Add initial state variance to state variance history
     
     
     %% Plot results
     if plotFigures
         
-        % Compute estimated position and velocity at observation epochs
-        X_est_pv = X_est;
-        for k = 1:nop
-            for j=1:size(X_est,2)
-                [pos,vel] = ep2pv(X_est((k-1)*svs+1:(k-1)*svs+6,j),GM_kms);
-                X_est_pv((k-1)*svs+1:(k-1)*svs+3,j) = pos;
-                X_est_pv((k-1)*svs+4:(k-1)*svs+6,j) = vel;
-            end
-        end
-        
         % Plot estimated ROM modes and corresponding uncertainty
-        ROMplot2 = figure;
+        figure;
         for i = 1:r
             subplot(ceil(r/4),4,i)
             plot(time/3600,X_est(end-r+i,:),'Linewidth',1); hold on;
             plot(time/3600,X_est(end-r+i,:) + 3*Pv(end-r+i,:).^0.5,'--k','Linewidth',1);
             plot(time/3600,X_est(end-r+i,:) - 3*Pv(end-r+i,:).^0.5,'--k','Linewidth',1);
-            xlabel('Time, hrs');ylabel('z');
+            xlabel('Time, hrs');ylabel(sprintf('z_%.0f',i));legend('Estimate','3\sigma');
             title(sprintf('Mode %.0f',i));
             axis tight;
             set(gca,'fontsize', 14);
         end
         
         % Plot uncertainty in estimated ROM modes
-        ROMcovplot = figure;
+        figure;
         for i = 1:r
             subplot(ceil(r/4),4,i)
             plot(time/3600,3*Pv(end-r+i,:).^0.5,'k');
-            xlabel('Time, hrs');ylabel('z 3\sigma');
+            xlabel('Time, hrs'); ylabel(['z_{' num2str(i) '} 3\sigma']);
             title(sprintf('Mode %.0f',i));
         end
         
-        % Plot estimated BC and corresponding uncertainty
-        BCplot2 = figure;
+        % Plot estimated ballistic coefficients and corresponding uncertainty
+        figure;
         for i = 1:nop
             subplot(ceil(nop/2),2,i)
             plot(time/3600,X_est(svs*i,:)/1000,'Linewidth',1); hold on;
             plot(time/3600,X_est(svs*i,:)/1000 + 3*Pv(svs*i,:).^0.5/1000,'--k','Linewidth',1);
             plot(time/3600,X_est(svs*i,:)/1000 - 3*Pv(svs*i,:).^0.5/1000,'--k','Linewidth',1);
-            xlabel('Time, hrs');ylabel('BC [m^2/kg]');
+            xlabel('Time, hrs');ylabel('BC [m^2/kg]');legend('Estimate','3\sigma');
             title(sprintf('Orbit %.0f, BC=%.2f',objects(i).noradID,X_est(svs*i,end)));
             axis tight;
             set(gca,'fontsize', 14);
         end
         
-        % Plot uncertainty in estimated BC
-        BCcovplot = figure;
+        % Plot uncertainty in estimated ballistic coefficients
+        figure;
         for i = 1:nop
             subplot(ceil(nop/2),2,i)
             plot(time/3600,3*Pv(svs*i,:).^0.5./X_est(svs*i,:)*100,'k');
@@ -276,30 +311,8 @@ try
             title(sprintf('Orbit %.0f, BC=%.2f',objects(i).noradID,X_est(svs*i,end)));
         end
         
-        % Plot difference between observed and estimated orbital elements
-        meePlot = figure;
-        meeDiffFull = [];
-        for i = 1:nop
-            meeDiff = meeMeas((i-1)*6+1:i*6,:) - X_est((i-1)*svs+1:(i-1)*svs+6,:);
-            meeDiff(6,:) = wrapToPi(meeDiff(6,:));
-            for j=1:6
-                subplot(2,3,j); hold on;
-                plot(time/3600,meeDiff(j,:));
-                plot(time/3600,3*sqrt(RM((i-1)*6+j,(i-1)*6+j))*ones(length(time),1),'k');
-                plot(time/3600,-3*sqrt(RM((i-1)*6+j,(i-1)*6+j))*ones(length(time),1),'k');
-            end
-            meeDiffFull = [meeDiffFull meeDiff];
-        end
-        covMeasErrors = var(meeDiffFull,0,2)';
-        subplot(2,3,1); xlabel('Time [hours]'); ylabel('p [km]'); legend(objectIDlabels);
-        subplot(2,3,2); xlabel('Time [hours]'); ylabel('f [-]');
-        subplot(2,3,3); xlabel('Time [hours]'); ylabel('g [-]');
-        subplot(2,3,4); xlabel('Time [hours]'); ylabel('h [-]');
-        subplot(2,3,5); xlabel('Time [hours]'); ylabel('k [-]');
-        subplot(2,3,6); xlabel('Time [hours]'); ylabel('L [rad]');
-        
-        % Plot uncertainty in estimated orbits
-        meeCovPlot = figure;
+        % Plot uncertainty in estimated equinoctial orbital elements
+        figure;
         for i = 1:nop
             for j=1:6
                 subplot(2,3,j); hold on;
@@ -313,8 +326,8 @@ try
         subplot(2,3,5); xlabel('Time [hours]'); ylabel('\sigma_k [-]');
         subplot(2,3,6); xlabel('Time [hours]'); ylabel('\sigma_L [rad]');
         
-        % Plot position errors
-        posPlot = figure;
+        % Plot position errors w.r.t. TLE measurements
+        figure;
         for k = 1:nop
             xx_pv_est = zeros(6,size(X_est,2));
             xx_pv_meas = zeros(6,size(meeMeas,2));
@@ -333,29 +346,29 @@ try
             title(sprintf('Orbit %.0f, mean= %.2f',objects(k).noradID,mean(posErrors)));
         end
         
-        % Plot uncertainty on grid
+        % Plot uncertainty in estimated density on local solar time v latitude grid
         slt_plot = 0:0.5:24;
         lat_plot = -90:4.5:90;
         [SLT,LAT]=ndgrid(slt_plot,lat_plot);
-        
         sltx = reshape(SLT,length(slt_plot)*length(lat_plot),1);
         latx = reshape(LAT,length(slt_plot)*length(lat_plot),1);
         H_SL = zeros(numel(sltx),r);
         
-        densCovPlot2 = figure;
+        figure;
         set(gcf,'Color','w');
-        heights = 450:-50:350;
+        heights = 500:-100:300; % Plot for different altitudes
         nofHeights = length(heights);
         for i = 1:nofHeights
             height = heights(i);
             for ij = 1:numel(sltx)
                 for jk = 1:r
-                    H_SL(ij,jk) = F_U{1,jk}(sltx(ij),latx(ij),height);
+                    H_SL(ij,jk) = F_U{1,jk}(sltx(ij),latx(ij),height); % ROM to grid transformation matrix
                 end
             end
-            Pyy = diag(H_SL(:,:) * diag(Pv(end-r+1:end,end)) * H_SL(:,:)');
-            Pyyr = reshape(Pyy,length(slt_plot),length(lat_plot));
-            Pyy1 = 100*Pyyr.^0.5*log(10);
+            Pyy = diag(H_SL(:,:) * diag(Pv(end-r+1:end,end)) * H_SL(:,:)'); % ROM covariance mapped to local solar time and latitude
+            Pyyr = reshape(Pyy,length(slt_plot),length(lat_plot)); % Convert to matrix
+            Pyy1 = 100*Pyyr.^0.5*log(10); % Convert covariance of log density to standard deviation of density
+            % Plot estimated standard deviation (1-sigma error) of density
             max1 = max(max(Pyy1)); min1 = min(min(Pyy1));
             subplot(nofHeights,1,i)
             contourf(slt_plot,lat_plot,Pyy1',100,'LineStyle','none');
