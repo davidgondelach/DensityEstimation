@@ -1,18 +1,18 @@
 # DensityEstimation
 Matlab code for global thermospheric density estimation using two-line element data.
 
-
-Copyright © 2019 by David Gondelach
-
-This code is licensed under the GNU General Public License version 3 - see the [LICENSE.md](LICENSE.md) file for details.
-
-Disclaimer: 
-This code is under development and may not directly run after installation. The code and instructions are being updated.
+This is a complete toolkit for Matlab that enables you to estimate the global thermospheric density using two-line element data. Three different reduced-order density models can be employed for the estimation. Details of the technique and models can be found in the journal paper, see https://doi.org/10.1029/2019SW002356 (open access).
 
 
-### Acknowlegdments
+Copyright © 2020 by David Gondelach
 
-The contributions by Dr. Richard Linares and Dr. Piyush Mehta in the design and implementation of the code are acknowledged.
+
+### License
+This code is licensed under the GNU General Public License version 3 - see the [LICENSE](LICENSE) file for details.
+
+
+### Acknowledgments
+The contributions by Dr. Richard Linares and Dr. Piyush M. Mehta in the design and implementation of the code are acknowledged.
 
 The MATLAB code for Jacchia-Bowman 2008 model was developed by Meysam Mahooti (copyright 2018) and was downloaded from https://www.mathworks.com/matlabcentral/fileexchange/56163-jacchia-bowman-atmospheric-density-model (version 2.0.0.0).
 
@@ -22,22 +22,21 @@ The MATLAB code for the SGP4 model and several time and reference frame routines
 ### References
 The density modeling and estimation techniques are described in:
 ```
-@misc{gondelach2019realtime,
-    title={Real-Time Thermospheric Density Estimation Via Two-Line-Element Data Assimilation},
-    author={David Gondelach and Richard Linares},
-    year={2019},
-    eprint={1910.00695},
-    archivePrefix={arXiv}
+@article{gondelach2019realtime,
+  author = {Gondelach, David J. and Linares, Richard},
+  title = {Real-Time Thermospheric Density Estimation Via Two-Line-Element Data Assimilation},
+  journal = {Space Weather},
+  doi = {10.1029/2019SW002356},
+  url = {https://doi.org/10.1029/2019SW002356}
 }
 ```
-see https://arxiv.org/abs/1910.00695
-
+see https://doi.org/10.1029/2019SW002356 (open access).
 
 ### Installation instructions
 1. Download the DensityEstimation Matlab code
 2. Download and install SPICE Toolkit for Matlab: https://naif.jpl.nasa.gov/naif/toolkit_MATLAB.html
 3. Set the path to the SPICE Toolkit directory in mainDensityEstimation.m
-4. Download SPICE kernels (i.e. ephemeris files) from https://naif.jpl.nasa.gov/pub/naif/generic_kernels/ and put them in the folder Data. Download the following kernel files: latest_leapseconds.tls, de430.bsp, pck00010.tpc, earth_fixed.tf, earthstns_itrf93_050714.bsp, earth_070425_370426_predict.bpc, earth_720101_070426.bpc, earth_latest_high_prec.bpc (see links below).
+4. Download SPICE kernels (i.e. ephemeris files) from https://naif.jpl.nasa.gov/pub/naif/generic_kernels/ and put them in the folder Data. See links below.
 5. Download space weather file from Celestrak and put in folder Data: https://www.celestrak.com/SpaceData/SW-All.txt
 6. Download Earth orientation data file from Celestrak and put in folder Data: https://www.celestrak.com/SpaceData/EOP-All.txt
 7. Download 2 space weather files needed for the JB2008 model and put in folder Data: http://sol.spacenvironment.net/jb2008/indices/SOLFSMY.TXT  and  http://sol.spacenvironment.net/jb2008/indices/DTCFILE.TXT 
@@ -53,12 +52,15 @@ see https://arxiv.org/abs/1910.00695
 5. Run mainDensityEstimation
 
 
-### Ephemeris file links
+### Ephemeris files
+Download the following ephemeris files and put them in the Data folder:
 * latest_leapseconds.tls:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
 * de430.bsp:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
 * earthstns_itrf93_050714.bsp:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/stations/
 * pck00010.tpc, earth_fixed.tf, earth_070425_370426_predict.bpc, earth_720101_070426.bpc, earth_latest_high_prec.bpc:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
 
+
+MATLAB R2018b (Version 9.5) was used to develop and run the code.
 
 
 David Gondelach, Jan 2020
