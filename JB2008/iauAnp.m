@@ -1,3 +1,6 @@
+% File retrieved on 11 June 2019 from:
+% https://www.mathworks.com/matlabcentral/fileexchange/56163-jacchia-bowman-atmospheric-density-model
+%
 %   - - - - - - -
 %    i a u A n p
 %   - - - - - - -
