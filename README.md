@@ -30,7 +30,7 @@ The density modeling and estimation techniques are described in:
   url = {https://doi.org/10.1029/2019SW002356}
 }
 ```
-see https://doi.org/10.1029/2019SW002356 (open access).
+see https://doi.org/10.1029/2019SW002356 or https://arxiv.org/abs/1910.00695.
 
 ### Installation instructions
 1. Download the DensityEstimation Matlab code
@@ -61,9 +61,13 @@ Download the following ephemeris files and put them in the Data folder:
 
 
 ### Technical notes
-This version of the toolbox does not include third-body and solar radiation pressure perturbations. The density estimation can be speed up by reducing the degree of the gravity model (see mainDensityEstimation.m, line 79) at the cost of reduced density estimate accuracy.
+This version of the toolbox does not include third-body and solar radiation pressure perturbations. The speed of the code has not been optimized; 10-day density estimation may required several hours of computation. The estimation can be speed up by reducing the degree of the gravity model (see mainDensityEstimation.m, line 79) at the cost of reduced density estimate accuracy.
 
 MATLAB R2018b (Version 9.5) was used to develop and run the code.
+
+
+### Version
+The latest version is this code may be found on: https://github.com/davidgondelach/DensityEstimation
 
 
 David Gondelach, Jan 2020
