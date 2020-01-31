@@ -1,6 +1,17 @@
 function [MJD,GWRAS,SUN,F10,F10B,S10,S10B,XM10,XM10B,Y10,Y10B,DSTDTC] = computeJB2000SWinputs(year,doy,hour,minute,sec,SOLdata,DTCdata,eopdata)
 % Input: Datetime in UTC and space weather data
 % Output: space weather proxies in format for JB2008 atmosphere model
+%
+% Based on code by M. Mahooti, 2018
+% See https://www.mathworks.com/matlabcentral/fileexchange/56163-jacchia-bowman-atmospheric-density-model
+%
+% Modified by: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+
+%------------- BEGIN CODE --------------
 
 [month,day,~,~,~] = days2mdh(year,doy);
 MJD = Mjday(year,month,day,hour,minute,sec);
@@ -60,3 +71,5 @@ SUN(1)  = ra_Sun;
 SUN(2)  = dec_Sun;
 
 end
+
+%------------- END OF CODE --------------
