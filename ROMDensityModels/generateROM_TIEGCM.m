@@ -1,11 +1,19 @@
 function [PhiC,Uh,Qrom] = generateROM_TIEGCM(TA,r)
 %generateROM_TIEGCM - Compute reduced-order dynamic density model based on 
 % TIE-GCM density data
-
+%
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com
 % Sep 2019; Last revision: 24-Sep-2019
+%
+%  Reference:
+%  D.J. Gondelach and R. Linares, "Real-Time Thermospheric Density
+%  Estimation Via Two-Line-Element Data Assimilation", Space Weather, 2020
+%  https://doi.org/10.1029/2019SW002356 or https://arxiv.org/abs/1910.00695
+% 
 
 %------------- BEGIN CODE --------------
 
@@ -38,6 +46,7 @@ Om = [X1;U1];
 % Phi = X2*Om^+
 Phi = (Om'\X2')';
 
+% Discrete-time dynamic and input matrix
 A = Phi(1:r,1:r);
 B = Phi(1:r,r+1:end);
 
