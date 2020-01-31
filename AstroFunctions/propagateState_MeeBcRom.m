@@ -4,6 +4,8 @@ function [xf_mee] = propagateState_MeeBcRom(x0_mee,t0,tf,AC,BC,SWinputs,r,nop,sv
 % propagate states and reduced-order density and convert Cartesian states
 % back to modified equinoctial elements.
 %
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and
 % Astronautics

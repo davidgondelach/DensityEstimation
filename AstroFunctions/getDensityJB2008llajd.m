@@ -1,6 +1,8 @@
 function [rho] = getDensityJB2008llajd(lon,lat,alt,jdate)
 %getDensityJB2008llajd - Compute density using JB2008 density model
-
+%
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com

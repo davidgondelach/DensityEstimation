@@ -1,6 +1,8 @@
 function [ ] = loadSGP4()
 %LOADSGP4 - Load SGP4 constants
 %
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and
 % Astronautics

@@ -1,6 +1,8 @@
 function [TLEstruct] = getTLEs(filename)
 %getTLEs - Read TLE data from file and sort on data
 %
+% This code is licensed under the GNU General Public License version 3.
+%
 % Based on code by Aleksander Lidtke, University of Southampton, UK, July 2015
 %
 % Modified by: David Gondelach

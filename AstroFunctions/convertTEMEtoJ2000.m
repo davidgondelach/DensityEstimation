@@ -1,4 +1,7 @@
 function [reci, veci] = convertTEMEtoJ2000(rteme, vteme, jdate)
+%CONVERTTEMETOJ2000 - Convert Cartesian position and velocity vector
+% from True Equator Mean Equinox (TEME) reference frame to J2000
+% reference frame
 
 global EOPMat;
 [ ~, ~, dut1, ~, ddpsi, ddeps, dat ] = computeEOP_Celestrak( EOPMat, jdate );

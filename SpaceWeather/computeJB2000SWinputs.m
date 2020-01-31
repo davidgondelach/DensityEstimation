@@ -2,6 +2,8 @@ function [MJD,GWRAS,SUN,F10,F10B,S10,S10B,XM10,XM10B,Y10,Y10B,DSTDTC] = computeJ
 % Input: Datetime in UTC and space weather data
 % Output: space weather proxies in format for JB2008 atmosphere model
 %
+% This code is licensed under the GNU General Public License version 3.
+%
 % Based on code by M. Mahooti, 2018
 % See https://www.mathworks.com/matlabcentral/fileexchange/56163-jacchia-bowman-atmospheric-density-model
 %

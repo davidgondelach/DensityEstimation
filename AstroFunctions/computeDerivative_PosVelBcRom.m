@@ -24,7 +24,9 @@ function [ f ] = computeDerivative_PosVelBcRom(t,xp,AC,BC,SWinputs,r,noo,svs,F_U
 %
 % Outputs:
 %    f          Time derivative of xp: dxp/dt
-
+%
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and
 % Astronautics

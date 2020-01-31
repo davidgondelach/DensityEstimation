@@ -9,8 +9,7 @@ function [X_est,Pv] = UKF(X_est,Meas,time,stateFnc,measurementFcn,P,RM,Q)
 %   RM: observation noise
 %   Q: process noise
 %
-% Reference: Wan, E. A., & Van Der Merwe, R. (2001). The unscented Kalman filter, In: Kalman filtering and neural networks, pp. 221–280.
-%
+% This code is licensed under the GNU General Public License version 3.
 %
 % Based on code by P.M. Mehta, University of Minnesota, 2018
 %
@@ -18,6 +17,9 @@ function [X_est,Pv] = UKF(X_est,Meas,time,stateFnc,measurementFcn,P,RM,Q)
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com
 % Sep 2019; Last revision: 24-Sep-2019
+%
+% Reference: Wan, E. A., & Van Der Merwe, R. (2001). The unscented Kalman filter, In: Kalman filtering and neural networks, pp. 221–280.
+%
 
 %------------- BEGIN CODE --------------
 

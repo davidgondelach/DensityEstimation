@@ -1,6 +1,8 @@
 function [objects] = getTLEsForEstimation(startYear, startMonth, startDay, endYear, endMonth, endDay, selectedObjects, getTLEsFromSingleFile)
 %getTLEsForEstimation - Read TLE data from file
 %
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com

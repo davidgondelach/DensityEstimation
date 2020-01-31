@@ -1,6 +1,8 @@
 function [ ] = loadGravityModel( gravmodeldegree )
 %LOADGRAVITYMODEL - Load Earth gravity spherical harmonics constants and coefficients
 %
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and
 % Astronautics

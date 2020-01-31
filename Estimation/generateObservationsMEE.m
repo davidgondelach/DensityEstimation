@@ -1,7 +1,9 @@
 function [meeObs] = generateObservationsMEE(objects,obsEpochs,GM_kms)
 %generateObservationsMEE - Generate observations in modified equinoctial 
 %elements at specified observation epochs
-
+%
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com

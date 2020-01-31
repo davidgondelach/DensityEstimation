@@ -14,7 +14,9 @@ function [rho] = getDensityROM(pos,jdate,romState,r,F_U,M_U,maxAtmAlt)
 %
 % Outputs:
 %    rho        densities at positions giving by pos
-
+%
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and
 % Astronautics
