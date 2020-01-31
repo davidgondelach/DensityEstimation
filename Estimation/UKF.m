@@ -1,5 +1,5 @@
 function [X_est,Pv] = UKF(X_est,Meas,time,stateFnc,measurementFcn,P,RM,Q)
-%UKF Unscented Kalman filter
+%UKF Square-root Unscented Kalman filter
 %   X_est: initial state guess
 %   Meas: measurements
 %   time: measurement times
@@ -8,10 +8,13 @@ function [X_est,Pv] = UKF(X_est,Meas,time,stateFnc,measurementFcn,P,RM,Q)
 %   P: state covariance matrix
 %   RM: observation noise
 %   Q: process noise
-
-% First version by P. Metha, 2018
-
-% Author: David Gondelach
+%
+% Reference: Wan, E. A., & Van Der Merwe, R. (2001). The unscented Kalman filter, In: Kalman filtering and neural networks, pp. 221–280.
+%
+%
+% Based on code by P.M. Mehta, University of Minnesota, 2018
+%
+% Modified by: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com
 % Sep 2019; Last revision: 24-Sep-2019
@@ -34,8 +37,8 @@ try
     for i = 1:m-1
         
         fprintf('%.0f of %.0f \n',i,m-1)
-        sigv=real([eta*S -eta*S]);
-        xx=[X_est(:,i) sigv+kron(X_est(:,i),ones(1,2*L))];
+        sigv = real([eta*S -eta*S]);
+        xx = [X_est(:,i) sigv+kron(X_est(:,i),ones(1,2*L))];
         
         % Time Update
         [Xp] = stateFnc(xx,time(i),time(i+1));
@@ -43,8 +46,8 @@ try
         X_est(:,i+1) = Wm(1) * Xp(:,1) + Wm(2) * sum(Xp(:,2:end),2);
         
         % Get Propagated Square Root
-        [~,S_minus]=qr([(SR_Wc(2)*(Xp(:,2:end)-kron(X_est(:,i+1),ones(1,2*L)))) SR_Q]',0);
-        S_minus=cholupdate(S_minus,Wc(1)*(Xp(:,1)-X_est(:,i+1)))';
+        [~,S_minus] = qr([(SR_Wc(2)*(Xp(:,2:end)-kron(X_est(:,i+1),ones(1,2*L)))) SR_Q]',0);
+        S_minus = cholupdate(S_minus,Wc(1)*(Xp(:,1)-X_est(:,i+1)))';
         
         % Measurement function
         [Ym] = measurementFcn(Xp);
@@ -57,14 +60,14 @@ try
         DY2(6:6:end) = wrapToPi(DY2(6:6:end)); % Wrap difference in true longitude to [-pi,pi]
         
         % Measurement Update
-        [~,S_y]=qr([SR_Wc(2)*(DY2) SR_R]',0);
-        S_y=cholupdate(S_y,Wc(1)*DY)';
+        [~,S_y] = qr([SR_Wc(2)*(DY2) SR_R]',0);
+        S_y = cholupdate(S_y,Wc(1)*DY)';
         
         % Calculate Pxy
-        Pxy0=Wc(1)*(Xp(:,1)-X_est(:,i+1))*DY';
-        Pyymat=DY2;
-        Pmat=Xp(:,2:end)-kron(X_est(:,i+1),ones(1,2*L));
-        Pxy=Pxy0+Wc(2)*(Pmat*Pyymat');
+        Pxy0 = Wc(1)*(Xp(:,1)-X_est(:,i+1))*DY';
+        Pyymat = DY2;
+        Pmat = Xp(:,2:end)-kron(X_est(:,i+1),ones(1,2*L));
+        Pxy = Pxy0+Wc(2)*(Pmat*Pyymat');
         
         yres = Meas(:,i+1)-ym;
         yres(6:6:end) = wrapToPi(yres(6:6:end)); % Wrap difference in true longitude to [-pi,pi]
@@ -78,7 +81,7 @@ try
             S = cholupdate(S',U(:,j),'-')';
         end
         
-        HH(:,:,i+1)=(pinv(S*S')*KG*RM)';
+        HH(:,:,i+1) = (pinv(S*S')*KG*RM)';
         Pv(:,i+1) = diag(S*S')';
         
     end

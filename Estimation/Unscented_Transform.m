@@ -1,4 +1,17 @@
 function [Wm,Wc,L,lambda] = Unscented_Transform(x0f,varargin)
+%Unscented_Transform - Compute weights for unscented transformation
+%
+% Reference: Wan, E. A., & Van Der Merwe, R. (2001). The unscented Kalman filter, In: Kalman filtering and neural networks, pp. 221–280.
+%
+% Based on code by P.M. Mehta, University of Minnesota, 2018
+%
+% Modified by: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 24-Sep-2019
+
+
+%------------- BEGIN CODE --------------
 
 L=length(x0f);
 alpha = 1;
@@ -18,3 +31,4 @@ Wc = [W0c Wim+zeros(1,2*L)];
 
 end
 
+%------------- END OF CODE --------------
