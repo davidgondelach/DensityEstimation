@@ -26,8 +26,8 @@
 %
 %  Reference:
 %  D.J. Gondelach and R. Linares, "Real-Time Thermospheric Density
-%  Estimation Via Two-Line-Element Data Assimilation", 2019,
-%  https://arxiv.org/abs/1910.00695
+%  Estimation Via Two-Line-Element Data Assimilation", Space Weather, 2020
+%  https://doi.org/10.1029/2019SW002356 or https://arxiv.org/abs/1910.00695
 % 
 
 

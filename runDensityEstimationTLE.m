@@ -47,8 +47,8 @@ function runDensityEstimationTLE(yr,mth,dy,nofDays,ROMmodel,r,selectedObjects,va
 %
 %  Reference:
 %  D.J. Gondelach and R. Linares, "Real-Time Thermospheric Density
-%  Estimation Via Two-Line-Element Data Assimilation", 2019,
-%  https://arxiv.org/abs/1910.00695
+%  Estimation Via Two-Line-Element Data Assimilation", Space Weather, 2020
+%  https://doi.org/10.1029/2019SW002356 or https://arxiv.org/abs/1910.00695
 % 
 
 %------------- BEGIN CODE --------------
@@ -84,6 +84,7 @@ try
     [eopdata,SOLdata,DTCdata] = loadJB2008SWdata();
     
     %% Get TLE data
+    % Load a bit more TLEs than needed to plot the TLE data 
     maxAlt = 10000; % Maximum altitude of apogee [km], TLEs for objects with higher apogee will not be downloaded
     jdate0TLEs = juliandate(datetime(yr,mth,1,0,0,0));      % Start date of TLE collection window 
     [yrf, mthf, dyf, ~, ~, ~] = datevec(jdf+30-1721058.5);  % End date of TLE collection window 
@@ -95,7 +96,8 @@ try
         password = "[PASSWORD]"; % *** Specify your www.space-track.org password here! ***
         [objects] = downloadTLEsForEstimation(username, password, yr, mth, 1, yrf, mthf, dyf, maxAlt, selectedObjects);
     else
-        [objects] = getTLEsForEstimation(yr, mth, 1, yrf, mthf, dyf, selectedObjects);
+        getTLEsFromSingleFile = false; % If true: all TLEs are loaded from file named "estimationObjects.tle" else TLEs are loaded from individual files named "[NORADID].tle"
+        [objects] = getTLEsForEstimation(yr, mth, 1, yrf, mthf, dyf, selectedObjects, getTLEsFromSingleFile);
     end
 
     
@@ -346,20 +348,46 @@ try
             title(sprintf('Orbit %.0f, mean= %.2f',objects(k).noradID,mean(posErrors)));
         end
         
-        % Plot uncertainty in estimated density on local solar time v latitude grid
+        % Plot estimated density and uncertainty on local solar time v latitude grid
         slt_plot = 0:0.5:24;
         lat_plot = -90:4.5:90;
         [SLT,LAT]=ndgrid(slt_plot,lat_plot);
         sltx = reshape(SLT,length(slt_plot)*length(lat_plot),1);
         latx = reshape(LAT,length(slt_plot)*length(lat_plot),1);
-        H_SL = zeros(numel(sltx),r);
-        
-        figure;
-        set(gcf,'Color','w');
         heights = 500:-100:300; % Plot for different altitudes
         nofHeights = length(heights);
+        
+        % Plot estimated density
+        figure;
         for i = 1:nofHeights
             height = heights(i);
+            ALT = height*ones(size(SLT,1),size(SLT,2));
+            rhoVar = zeros(size(SLT,1),size(SLT,2));
+            for j = 1:r
+                UhI = F_U{j}(SLT,LAT,ALT);
+                rhoVar = rhoVar + UhI*X_est(end-r+j,end);
+            end
+            MI = M_U(SLT,LAT,ALT);
+            rho_rom = 10.^(rhoVar+MI);
+            % Plot
+            subplot(nofHeights,1,i)
+            contourf(SLT,LAT,rho_rom,100,'LineStyle','none');
+            max1 = max(max(rho_rom)); min1 = min(min(rho_rom));
+            h = colorbar; caxis([min1 max1]);hold on;
+            yticks([-90 0 90]); ylabel('Latitude [deg]');
+            title(sprintf('Altitude = %.0f km',height));
+            ylabel(h,'Density [kg/m^3]','FontSize',14);
+            if i < nofHeights; set(gca,'XTickLabel',[]);end
+            if i == nofHeights; xlabel('Local solar time'); xticks([0 6 12 18 24]); end
+            set(gca,'FontSize',14);
+        end
+        
+        % Plot uncertainty in estimated density
+        figure;
+        set(gcf,'Color','w');
+        for i = 1:nofHeights
+            height = heights(i);
+            H_SL = zeros(numel(sltx),r);
             for ij = 1:numel(sltx)
                 for jk = 1:r
                     H_SL(ij,jk) = F_U{1,jk}(sltx(ij),latx(ij),height); % ROM to grid transformation matrix
@@ -368,14 +396,15 @@ try
             Pyy = diag(H_SL(:,:) * diag(Pv(end-r+1:end,end)) * H_SL(:,:)'); % ROM covariance mapped to local solar time and latitude
             Pyyr = reshape(Pyy,length(slt_plot),length(lat_plot)); % Convert to matrix
             Pyy1 = 100*Pyyr.^0.5*log(10); % Convert covariance of log density to standard deviation of density
+            
             % Plot estimated standard deviation (1-sigma error) of density
-            max1 = max(max(Pyy1)); min1 = min(min(Pyy1));
             subplot(nofHeights,1,i)
             contourf(slt_plot,lat_plot,Pyy1',100,'LineStyle','none');
-            h = colorbar;caxis([min1 max1]);hold on;
+            max1 = max(max(Pyy1)); min1 = min(min(Pyy1));
+            h = colorbar; caxis([min1 max1]);hold on;
             yticks([-90 0 90]); ylabel('Latitude [deg]');
-            title(sprintf('Altitude = %.0f',height));
-            if i == ceil(nofHeights/2); ylabel(h,'1\sigma error [%]','FontSize',14); end
+            title(sprintf('Altitude = %.0f km',height));
+            ylabel(h,'1\sigma error [%]','FontSize',14);
             if i < nofHeights; set(gca,'XTickLabel',[]);end
             if i == nofHeights; xlabel('Local solar time'); xticks([0 6 12 18 24]); end
             set(gca,'FontSize',14);
@@ -384,6 +413,7 @@ try
     end
     
 catch errMsg
+    % Catch error
     rethrow(errMsg);
 end
 
