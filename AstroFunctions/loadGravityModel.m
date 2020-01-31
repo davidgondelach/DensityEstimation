@@ -1,4 +1,11 @@
 function [ ] = loadGravityModel( gravmodeldegree )
+%LOADGRAVITYMODEL - Load Earth gravity spherical harmonics constants and coefficients
+%
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and
+% Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 03-Oct-2019
 
 % Initialize gravity model
 global GM Re gravdegree C_gravmodel S_gravmodel sF_gravmod

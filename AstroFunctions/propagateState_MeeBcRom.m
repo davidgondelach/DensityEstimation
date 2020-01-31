@@ -1,4 +1,16 @@
 function [xf_mee] = propagateState_MeeBcRom(x0_mee,t0,tf,AC,BC,SWinputs,r,nop,svs,F_U,M_U,maxAtmAlt,et0,jdate0)
+%PROPAGATESTATE_MEEBCROM - Propagate objects and ROM density
+% Convert state in modified equinoctial elements to Cartesian coordinates
+% propagate states and reduced-order density and convert Cartesian states
+% back to modified equinoctial elements.
+%
+% Author: David Gondelach
+% Massachusetts Institute of Technology, Dept. of Aeronautics and
+% Astronautics
+% email: davidgondelach@gmail.com
+% Sep 2019; Last revision: 03-Oct-2019
+
+%------------- BEGIN CODE --------------
 
 mu = 398600.4415;
 
@@ -33,3 +45,5 @@ for k = 1:nop
 end
 
 end
+
+%------------- END OF CODE --------------

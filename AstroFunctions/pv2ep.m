@@ -17,7 +17,7 @@ function EP = pv2ep(rr, vv, mu)
 %  mee(5) = k equinoctial element
 %  mee(6) = true longitude (radians)
 
-% Orbital Mechanics with MATLAB
+% Orbital Mechanics with MATLAB by David Eagle, 2013
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

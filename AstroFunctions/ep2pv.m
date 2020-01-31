@@ -18,7 +18,7 @@ function [rr, vv] = ep2pv(EP, mu)
 %  rr = eci position vector (kilometers)
 %  vv = eci velocity vector (kilometers/second)
 
-% Orbital Mechanics with MATLAB
+% Orbital Mechanics with MATLAB by David Eagle, 2013
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
