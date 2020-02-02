@@ -1,6 +1,8 @@
-function [Inputs] = computeSWinputs_TIEGCM(jd0,jdf,TIEGCMSWdata)
-%computeSWinputs_TIEGCM - Compute space weather inputs for ROM-TIEGCM model
-
+function [Inputs] = computeSWinputs_TIEGCM(jd0,jdf,SWmatDailyTIEGCM, SWmatMonthlyPredTIEGCM)
+%computeSWinputs_NRLMSISE - Compute space weather inputs for ROM-TIEGCM model
+%
+% This code is licensed under the GNU General Public License version 3.
+%
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com
@@ -8,24 +10,41 @@ function [Inputs] = computeSWinputs_TIEGCM(jd0,jdf,TIEGCMSWdata)
 
 %------------- BEGIN CODE --------------
 
+% Output hourly space weather
 tt = jd0:1/24:jdf;
 nofPoints = length(tt);
 
-jd19970101 = 2450449.5;
-
-Inputs = zeros(6,nofPoints);
+Inputs = zeros(7,nofPoints);
 for i=1:nofPoints
+    % Date and time
     jdate = tt(i);
-    row = round((jdate-jd19970101)*24);
-    % [jdate; doy; hour; f107d; f107a; Kp]
+    [yy, mm, dd, hh, mnmn, ss] = datevec(jdate-1721058.5);
+    [doy] = dayofyear(yy,mm,dd);
+    UThrs = hh + mnmn/60 + ss/3600;
+    
+    % Get TIE-GCM space weather data
+    [ f107Average, f107Daily, kp ] = computeSWnrlmsise( SWmatDailyTIEGCM, SWmatMonthlyPredTIEGCM, jdate, true );
+
+    % [jdate; doy; UThrs; F107; F107a; Kp]
     Inputs(1,i) = jdate;
-    Inputs(2:6,i) = TIEGCMSWdata(row,:)';
+    Inputs(2,i) = doy; 
+    Inputs(3,i) = UThrs; 
+    Inputs(4,i) = f107Daily; 
+    Inputs(5,i) = f107Average;
+    Inputs(6,i) = kp(2); % 3-hourly Kp
 end
+
+% Smooth space weather data
+Inputs(4,:) = movmean(Inputs(4,:),[12 11]); % F10: average over 24h
+Inputs(5,:) = movmean(Inputs(5,:),[12 11]); % F10: average over 24h
+Inputs(6,:) = movmean(Inputs(6,:),3); % kp daily: average over 3h
+
 % Add future (now+1hr) values F10 and Kp
 Inputs(7,1:end-1) = Inputs(4,2:end); % F10 (now+1hr)
 Inputs(8,1:end-1) = Inputs(6,2:end); % Kp (now+1hr)
-Inputs(7,end) = TIEGCMSWdata(row+1,3)'; % F10 (now+1hr)
-Inputs(8,end) = TIEGCMSWdata(row+1,5)'; % Kp (now+1hr)
+[ ~, f107Daily, kp ] = computeSWnrlmsise( SWmatDailyTIEGCM, SWmatMonthlyPredTIEGCM, jdf+1/24 );
+Inputs(7,end) = f107Daily; % F10 (now+1hr)
+Inputs(8,end) = kp(2); % Kp (now+1hr)
 
 % Add quadratic Kp
 Inputs(9,:) = Inputs(6,:).^2; % Kp^2 (now)

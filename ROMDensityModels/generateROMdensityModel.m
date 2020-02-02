@@ -21,10 +21,11 @@ switch ROMmodel
         [PhiC,Uh,Qrom] = generateROM_JB2008(TA,r);
         
         % Compute the space weather inputs in the estimation period
-        [eopdata,SOLdata,DTCdata] = loadJB2008SWdata();
-        [SWinputs] = computeSWinputs_JB2008(jd0,jdf+20,eopdata,SOLdata,DTCdata);
+        [eopdata,SOLdata,DTCdata] = loadJB2008SWdata(); % Read JB2008 space weather inputs from file
+        [SWinputs] = computeSWinputs_JB2008(jd0,jdf+1,eopdata,SOLdata,DTCdata);
         
-        % Maximum altitude of ROM density model
+        % Maximum altitude of ROM-JB2008 density model (for higher altitudes
+        % density is set to zero)
         maxAtmAlt = 800;
         
     case 'TIEGCM_1997_2008'
@@ -37,11 +38,13 @@ switch ROMmodel
         [PhiC,Uh,Qrom] = generateROM_TIEGCM(TA,r);
         
         % Compute the space weather inputs in the estimation period
-        TIEGCM_SWdata = TA.SWdataFull;
-        [SWinputs] = computeSWinputs_TIEGCM(jd0,jdf,TIEGCM_SWdata);
+        SWpath = fullfile('Data','SW-All.txt');
+        [ SWmatDailyTIEGCM, SWmatMonthlyPredTIEGCM ] = inputSWtiegcm( SWpath ); % Read F10.7 and Kp values from file
+        [SWinputs] = computeSWinputs_TIEGCM(jd0,jdf+1,SWmatDailyTIEGCM, SWmatMonthlyPredTIEGCM);
         
-        % Maximum altitude of ROM density model
-        maxAtmAlt = 500;
+        % Maximum altitude of ROM-TIEGCM density model (for higher altitudes
+        % density is set to zero)
+        maxAtmAlt = 500; % Density is computed up to 500km through extrapolation (ROM-TIEGCM model itself goes up to 450km)
         
     case 'NRLMSISE_1997_2008'
         TA = load('NRLMSISE_1997_2008_ROM_r100.mat');
@@ -54,10 +57,11 @@ switch ROMmodel
         
         % Compute the space weather inputs in the estimation period
         SWpath = fullfile('Data','SW-All.txt');
-        [ SWmatDaily, SWmatMonthlyPred ] = inputSWnrlmsise( SWpath );
-        [SWinputs] = computeSWinputs_NRLMSISE(jd0,jdf,SWmatDaily,SWmatMonthlyPred);
+        [ SWmatDaily, SWmatMonthlyPred ] = inputSWnrlmsise( SWpath ); % Read F10.7 and ap values from file
+        [SWinputs] = computeSWinputs_NRLMSISE(jd0,jdf+1,SWmatDaily,SWmatMonthlyPred);
         
-        % Maximum altitude of ROM density model
+        % Maximum altitude of ROM-NRLMSISE density model (for higher altitudes
+        % density is set to zero)
         maxAtmAlt = 800;
         
     otherwise
