@@ -4,7 +4,7 @@ Matlab code for global thermospheric density estimation using two-line element d
 This is a complete toolbox for Matlab that enables you to estimate the global thermospheric density using two-line element data. Three different reduced-order density models can be employed for the estimation. Details of the technique and models can be found in the journal paper, see https://doi.org/10.1029/2019SW002356 or https://arxiv.org/abs/1910.00695.
 
 
-Copyright © 2020 by David Gondelach
+Copyright © 2020 by David Gondelach and Richard Linares
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3634245.svg)](https://doi.org/10.5281/zenodo.3634245)
 
@@ -14,7 +14,7 @@ This code is licensed under the GNU General Public License version 3 - see the [
 
 
 ### Acknowledgments
-The contributions by Dr. Richard Linares and Dr. Piyush M. Mehta in the design and implementation of the code are acknowledged.
+The contributions by Dr. Piyush M. Mehta in the design and implementation of the code are acknowledged.
 
 The MATLAB code for Jacchia-Bowman 2008 model was developed by Meysam Mahooti (copyright 2018) and was downloaded from https://www.mathworks.com/matlabcentral/fileexchange/56163-jacchia-bowman-atmospheric-density-model (version 2.0.0.0).
 
