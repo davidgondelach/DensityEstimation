@@ -4,7 +4,7 @@
 %                                                                           %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%     Copyright (C) 2019 by David Gondelach
+%     Copyright (C) 2020 by David Gondelach
 % 
 %     This program is free software: you can redistribute it and/or modify
 %     it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ clearvars -global;
 yr      = 2002; % Year
 mth     = 8;    % Month
 dy      = 1;    % Day
-nofDays = 30;   % Number of days
+nofDays = 10;   % Number of days
 
 % Reduced-order model
 ROMmodel = 'JB2008_1999_2010';  % Name of reduced-order density model: JB2008_1999_2010, NRLMSISE_1997_2008 or TIEGCM_1997_2008

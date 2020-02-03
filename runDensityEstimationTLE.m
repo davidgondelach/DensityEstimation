@@ -24,7 +24,7 @@ function runDensityEstimationTLE(yr,mth,dy,nofDays,ROMmodel,r,selectedObjects,va
 %     plotFigures       - boolean: if true then plot results
 %
 % 
-%     Copyright (C) 2019 by David Gondelach
+%     Copyright (C) 2020 by David Gondelach
 % 
 %     This program is free software: you can redistribute it and/or modify
 %     it under the terms of the GNU General Public License as published by
@@ -111,7 +111,12 @@ try
         % NORAD ID
         ID = selectedObjects(i);
         % Orbital data (duplicate to ensure data is available)
-        newObjects(i) = objects([objects.noradID]==ID);
+        index = find([objects.noradID]==ID);
+        if isempty(index)
+            error('No TLEs found for object %.0f.', ID);
+        end
+        % Get object's TLE data
+        newObjects(i) = objects(index);
         % Ballistic coefficient
         BCestimates(i) = BCdata(BCdata(:,1)==ID,2);
     end
