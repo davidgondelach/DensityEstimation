@@ -7,7 +7,7 @@ function [ ] = loadGravityModel( gravmodeldegree )
 % Massachusetts Institute of Technology, Dept. of Aeronautics and
 % Astronautics
 % email: davidgondelach@gmail.com
-% Sep 2019; Last revision: 03-Oct-2019
+% Jan 2020; Last revision: 31-Jan-2020
 
 % Initialize gravity model
 global GM Re gravdegree C_gravmodel S_gravmodel sF_gravmod

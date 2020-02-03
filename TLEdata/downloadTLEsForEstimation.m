@@ -6,7 +6,7 @@ function [objects] = downloadTLEsForEstimation(username, password, startYear, st
 % Author: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com
-% Sep 2019; Last revision: 24-Sep-2019
+% Jan 2020; Last revision: 31-Jan-2020
 
 %------------- BEGIN CODE --------------
 

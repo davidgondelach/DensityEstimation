@@ -8,7 +8,7 @@ function [Wm,Wc,L,lambda] = Unscented_Transform(x0f,varargin)
 % Modified by: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com
-% Sep 2019; Last revision: 24-Sep-2019
+% Jan 2020; Last revision: 31-Jan-2020
 %
 % Reference: Wan, E. A., & Van Der Merwe, R. (2001). The unscented Kalman filter, In: Kalman filtering and neural networks, pp. 221–280.
 %

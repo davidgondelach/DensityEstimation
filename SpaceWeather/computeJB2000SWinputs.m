@@ -10,7 +10,7 @@ function [MJD,GWRAS,SUN,F10,F10B,S10,S10B,XM10,XM10B,Y10,Y10B,DSTDTC] = computeJ
 % Modified by: David Gondelach
 % Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 % email: davidgondelach@gmail.com
-% Sep 2019; Last revision: 24-Sep-2019
+% Jan 2020; Last revision: 31-Jan-2020
 
 
 %------------- BEGIN CODE --------------

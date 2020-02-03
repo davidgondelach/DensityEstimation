@@ -31,7 +31,7 @@ function [ f ] = computeDerivative_PosVelBcRom(t,xp,AC,BC,SWinputs,r,noo,svs,F_U
 % Massachusetts Institute of Technology, Dept. of Aeronautics and
 % Astronautics
 % email: davidgondelach@gmail.com
-% Sep 2019; Last revision: 03-Oct-2019
+% Jan 2020; Last revision: 31-Jan-2020
 
 %------------- BEGIN CODE --------------
 

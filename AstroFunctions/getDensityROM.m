@@ -21,7 +21,7 @@ function [rho] = getDensityROM(pos,jdate,romState,r,F_U,M_U,maxAtmAlt)
 % Massachusetts Institute of Technology, Dept. of Aeronautics and
 % Astronautics
 % email: davidgondelach@gmail.com
-% Sep 2019; Last revision: 03-Oct-2019
+% Jan 2020; Last revision: 31-Jan-2020
 
 %------------- BEGIN CODE --------------
 

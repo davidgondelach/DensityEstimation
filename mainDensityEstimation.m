@@ -22,7 +22,7 @@
 %  Author: David Gondelach
 %  Massachusetts Institute of Technology, Dept. of Aeronautics and Astronautics
 %  email: davidgondelach@gmail.com
-%  Sep 2019; Last revision: 21-Jan-2020
+%  Jan 2020; Last revision: 31-Jan-2020
 %
 %  Reference:
 %  D.J. Gondelach and R. Linares, "Real-Time Thermospheric Density

@@ -10,7 +10,7 @@ function [xf_mee] = propagateState_MeeBcRom(x0_mee,t0,tf,AC,BC,SWinputs,r,nop,sv
 % Massachusetts Institute of Technology, Dept. of Aeronautics and
 % Astronautics
 % email: davidgondelach@gmail.com
-% Sep 2019; Last revision: 03-Oct-2019
+% Jan 2020; Last revision: 31-Jan-2020
 
 %------------- BEGIN CODE --------------
 
