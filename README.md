@@ -6,7 +6,7 @@ This is a complete toolbox for Matlab that enables you to estimate the global th
 
 Copyright © 2020 by David Gondelach
 
-[![DOI](https://zenodo.org/badge/180176041.svg)](https://zenodo.org/badge/latestdoi/180176041)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3634245.svg)](https://doi.org/10.5281/zenodo.3634245)
 
 
 ### License
