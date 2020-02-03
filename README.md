@@ -65,11 +65,11 @@ Download the following ephemeris files and put them in the Data folder:
 ### Technical notes
 This version of the toolbox does not include third-body and solar radiation pressure perturbations. The speed of the code has not been optimized; 10-day density estimation may required several hours of computation. The estimation can be speed up by reducing the degree of the gravity model (see mainDensityEstimation.m, line 79) at the cost of reduced density estimate accuracy.
 
-MATLAB R2018b (Version 9.5) was used to develop and run the code.
+MATLAB R2018b (Version 9.5) was used to develop the code.
 
 
 ### Version
-The latest version is this code may be found on: https://github.com/davidgondelach/DensityEstimation
+The latest version is this toolbox may be found on: https://github.com/davidgondelach/DensityEstimation
 
 
 David Gondelach, Jan 2020
