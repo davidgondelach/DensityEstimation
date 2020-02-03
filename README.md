@@ -1,7 +1,7 @@
 # DensityEstimation
 Matlab code for global thermospheric density estimation using two-line element data.
 
-This is a complete toolbox for Matlab that enables you to estimate the global thermospheric density using two-line element data. Three different reduced-order density models can be employed for the estimation. Details of the technique and models can be found in the journal paper, see https://doi.org/10.1029/2019SW002356 (open access).
+This is a complete toolbox for Matlab that enables you to estimate the global thermospheric density using two-line element data. Three different reduced-order density models can be employed for the estimation. Details of the technique and models can be found in the journal paper, see https://doi.org/10.1029/2019SW002356 or https://arxiv.org/abs/1910.00695.
 
 
 Copyright © 2020 by David Gondelach
@@ -40,7 +40,7 @@ see https://doi.org/10.1029/2019SW002356 or https://arxiv.org/abs/1910.00695.
 5. Download space weather file from Celestrak and put in folder Data: https://www.celestrak.com/SpaceData/SW-All.txt
 6. Download Earth orientation data file from Celestrak and put in folder Data: https://www.celestrak.com/SpaceData/EOP-All.txt
 7. Download 2 space weather files needed for the JB2008 model and put in folder Data: http://sol.spacenvironment.net/jb2008/indices/SOLFSMY.TXT  and  http://sol.spacenvironment.net/jb2008/indices/DTCFILE.TXT 
-8. If you want to use automatic download of TLE data, then specify your “www.space-track.org” username and password in runDensityEstimationTLE.m, line 92-95. (Alternatively, you can download the TLE data manually and put them in the folder TLEdata with naming convention: [NORADID].tle, e.g. 12388.tle )
+8. If you want to use automatic download of TLE data, then specify your “www.space-track.org” username and password in runDensityEstimationTLE.m, line 95-96. (Alternatively, you can download the TLE data manually and put them in the folder TLEdata with naming convention: [NORADID].tle, e.g. 12388.tle )
 9. For each object used for estimation, specify the ballistic coefficient (BC) in the text file: Data/BCdata.txt
 
 
