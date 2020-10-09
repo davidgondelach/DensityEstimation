@@ -59,7 +59,7 @@ Download the following ephemeris files and put them in the Data folder:
 * latest_leapseconds.tls:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
 * de430.bsp:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
 * earthstns_itrf93_050714.bsp:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/stations/
-* pck00010.tpc, earth_fixed.tf, earth_070425_370426_predict.bpc, earth_720101_070426.bpc, earth_latest_high_prec.bpc:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
+* pck00010.tpc, earth_fixed.tf, earth_200101_990628_predict.bpc, earth_720101_070426.bpc, earth_latest_high_prec.bpc:  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
 
 
 ### Technical notes
